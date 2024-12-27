@@ -1,0 +1,59 @@
+:root {
+  --border-color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --border-color: black;
+  }
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  perspective: 1000px;
+}
+
+.logo-wrapper {
+  width: 300px;
+  height: 300px;
+  animation: float 8s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+.animated-logo {
+  width: 90%;
+  height: 90%;
+}
+
+.face {
+  filter: drop-shadow(0 10px 20px rgba(11, 6, 71, 0.2));
+}
+
+.face-border {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  stroke: var(--border-color);
+}
+
+.cap-shadow {
+  stroke: rgba(0, 0, 0, 0.15);
+}
+
+.cap-top-edge {
+  stroke: var(--border-color);
+}
+
+.edge-pattern {
+  stroke: url(#edge-gradient);
+}
+
+.gutter-detail {
+  stroke: url(#edge-gradient);
+  opacity: 0.6;
+}
+
+.mouth {
+  stroke: var(--border-color);
+}
