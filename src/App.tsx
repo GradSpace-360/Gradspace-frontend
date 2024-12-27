@@ -1,12 +1,30 @@
-import { Button } from "./components/ui/button"
+import { Route, Routes } from "react-router-dom"
+
+import Login from "./pages/Auth/Login"
+import Signup from "./pages/Auth/SignUp"
+import Dashboard from "./pages/Dashboard"
+import DevInfo from "./pages/DevInfo"
+import Home from "./pages/Home"
+
+// take user role from store of auth. setup Zustand store
+const userRole = "Student"
 
 const App = () => {
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
-            <h2 className="font-extrabold">GradSpace</h2>
-            <p>under development</p>
-            <Button>loading...</Button>
-        </div>
+        // implement protected routes, redirectAuthenticated routes
+        <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            {/* user role from store of auth. setup Zustand store  */}
+            <Route
+                path="/dashboard"
+                element={<Dashboard userRole={userRole} />}
+            />
+            <Route path="devinfo" element={<DevInfo />} />
+            {/* handle page not found */}
+            <Route path="*" element={<h1>Page not found</h1>} />
+        </Routes>
     )
 }
 
