@@ -233,4 +233,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
             throw error
         }
     },
+    /*
+        clearError function
+        it clears the error message in the store
+        this helps to ensure that the same error message is not shown across different auth pages
+    */
+    clearError: () => set({ error: null }),
 }))

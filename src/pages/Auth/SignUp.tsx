@@ -9,6 +9,7 @@
 
 import { motion } from "framer-motion"
 import { Lock, Mail, User } from "lucide-react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { Link, useNavigate } from "react-router-dom"
@@ -47,8 +48,10 @@ const SignUp: React.FC = () => {
             name: "",
         },
     })
-    const { signUp, error, isLoading } = useAuthStore()
+    const { signUp, error, isLoading, clearError } = useAuthStore()
     const navigate = useNavigate()
+
+    useEffect(clearError, [clearError])
 
     const handleSignUp = async (data: SignUpFormData) => {
         if (getStrength(data.password) < 3) {
@@ -76,9 +79,7 @@ const SignUp: React.FC = () => {
                     alt="welcome-image"
                 />
             </div>
-            <div
-                className="flex justify-center items-center bg-transparent   w-full sm:w-1/2 "
-            >
+            <div className="flex justify-center items-center bg-transparent   w-full sm:w-1/2 ">
                 <Card className="w-full max-w-md  z-50 bg-transparent border-0 shadow-none ">
                     <CardHeader className="space-y-1">
                         <div className="flex justify-center mb-4">

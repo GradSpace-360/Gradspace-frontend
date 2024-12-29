@@ -25,8 +25,8 @@ const EmailVerificationPage: React.FC = () => {
     const [code, setCode] = useState(["", "", "", "", "", ""])
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
     const navigate = useNavigate()
-    const { error, isLoading, verifyEmail } = useAuthStore()
-
+    const { error, clearError, isLoading, verifyEmail } = useAuthStore()
+    useEffect(clearError, [clearError])
     const handleChange = (index: number, value: string) => {
         const newCode = [...code]
 

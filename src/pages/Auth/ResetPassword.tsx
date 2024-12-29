@@ -8,7 +8,7 @@
  */
 import { motion } from "framer-motion"
 import { Lock } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { Link, useNavigate, useParams } from "react-router-dom"
 
@@ -29,8 +29,9 @@ const ResetPasswordPage: React.FC = () => {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
 
-    const { resetPassword, isLoading, error, message } = useAuthStore()
-
+    const { resetPassword, isLoading, error, clearError, message } =
+        useAuthStore()
+    useEffect(clearError, [clearError])
     const { token } = useParams() // Retrieving the token from the URL parameters
     const navigate = useNavigate()
 
