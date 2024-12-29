@@ -1,5 +1,4 @@
 "use client"
-
 import {
     IconHome,
     IconInfoCircle,
@@ -20,7 +19,8 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Link as ScrollLink } from "react-scroll"
 
-import AnimatedLogo from "@/components/AnimatedLogo/AnimatedLogo"
+import alumniSvg from "@/assets/alumni1.svg"
+import collegeSvg from "@/assets/college.svg"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -129,7 +129,9 @@ export default function Home() {
     }
 
     const { scrollYProgress } = useScroll()
-    useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
+    const opacity = useTransform(scrollYProgress, [0, 0.3], [-0.5, 1])
+
+    // useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
 
     return (
         <TracingBeam>
@@ -137,7 +139,18 @@ export default function Home() {
                 <DotBackground />
                 <FloatingNav navItems={navItems} />
                 <main className="flex-1">
-                    <div className="flex justify-center md:py-3 py-20 min-h-screen">
+                    <div className="flex items-center justify-center md:py-3 py-20 min-h-screen">
+                        <img
+                            src={alumniSvg}
+                            className="hidden sm:block h-[500px] mb-20"
+                            alt="alumi"
+                        />
+                        <motion.img
+                            style={{ opacity }}
+                            className="hidden sm:block   h-[500px]  -z-10 top-0 fixed"
+                            src={collegeSvg}
+                            alt="College"
+                        />
                         <section
                             className="w-full flex justify-center py-12 md:py-24 lg:py-32 xl:py-48"
                             id="home"
@@ -147,15 +160,11 @@ export default function Home() {
                                     initial={{ opacity: 0, y: 50 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="flex flex-col items-center space-y-4 text-center text-violet-900 dark:text-neutral-50"
+                                    className="flex flex-col items-center space-y-4 text-center text-[#000054] dark:text-[#FFFEFE]"
                                 >
                                     <h1 className="mb-6 text-5xl font-bold font-philosopher tracking-tighter md:text-6xl relative ">
-                                        <div className="absolute left-0 top-0 w-1/4 h-full hidden md:block">
-                                            <AnimatedLogo facefill={false} />
-                                        </div>
-
                                         <div>
-                                            <span className="inline-block px-4 transform skew-y-2 bg-violet-300 dark:bg-violet-900 dark:text-white text-black/90">
+                                            <span className="inline-block px-4 transform skew-y-2 bg-violet-300 dark:bg-[#1B1B1B] dark:text-violet-400 text-black/90">
                                                 <span className="transform -skew-y-2 inline-block">
                                                     Simplify
                                                 </span>
@@ -165,7 +174,7 @@ export default function Home() {
 
                                         <>
                                             Network,{" "}
-                                            <span className="inline-block px-4 transform -skew-y-2 bg-violet-300  dark:bg-violet-900 dark:text-white text-black/90">
+                                            <span className="inline-block px-4 transform -skew-y-2 bg-violet-300  dark:bg-[#1B1B1B] dark:text-violet-400 text-black/90">
                                                 <span className="transform skew-y-2 inline-block">
                                                     Amplify
                                                 </span>
@@ -285,7 +294,7 @@ export default function Home() {
                                 transition={{ duration: 0.5 }}
                                 className="text-3xl font-bold font-philosopher tracking-tighter sm:text-5xl text-center mb-12 text-gray-900 dark:text-gray-100"
                             >
-                                <span className="inline-block px-4 transform -skew-y-2 bg-violet-200 dark:bg-black font-bold font-philosopher text-violet-800">
+                                <span className="inline-block px-4 transform -skew-y-http://localhost:5173/2 bg-violet-200 dark:bg-[#080909] font-bold font-philosopher dark:text-violet-600 text-[#000054]">
                                     <span className="transform skew-y-2 inline-block">
                                         Key Features
                                     </span>
@@ -303,7 +312,7 @@ export default function Home() {
                                         key={index}
                                         variants={itemVariants}
                                     >
-                                        <Card className="group overflow-hidden transition-all duration-300 hover:shadow-xl dark:hover:shadow-primary/25 hover:-translate-y-2 bg-[#ffffff] dark:bg-black/80 border-gray-200 border-2 dark:border-gray-800 h-full">
+                                        <Card className="group overflow-hidden transition-all duration-300 hover:shadow-xl dark:hover:shadow-primary/25 hover:-translate-y-2 bg-[#ffffff] dark:bg-[#161716] border-gray-200 border-2 dark:border-gray-800 h-full">
                                             <CardContent className="flex flex-col items-center space-y-4 p-6 justify-between">
                                                 <motion.div
                                                     whileHover={{
@@ -315,11 +324,11 @@ export default function Home() {
                                                         stiffness: 260,
                                                         damping: 20,
                                                     }}
-                                                    className="p-3 rounded-full bg-primary/10 text-primary dark:bg-black/100 dark:text-white group-hover:bg-primary group-hover:text-white dark:group-hover:bg-slate-900 dark:group-hover:text-white"
+                                                    className="p-3 rounded-full bg-primary/10 text-primary dark:bg-[#1d1d1d] dark:text-white group-hover:bg-primary group-hover:text-white dark:group-hover:bg-[#080909] dark:group-hover:text-white"
                                                 >
                                                     {feature.icon}
                                                 </motion.div>
-                                                <h3 className="text-2xl font-bold text-center group-hover:text-primary transition-colors duration-300 text-gray-900 dark:text-gray-100">
+                                                <h3 className="text-2xl font-bold text-center group-hover:text-primary transition-colors duration-300 text-[#000054] font-philosopher dark:text-gray-100">
                                                     {feature.title}
                                                 </h3>
                                                 <p className="text-gray-600 dark:text-gray-300 text-center group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors duration-300">
@@ -341,7 +350,7 @@ export default function Home() {
                                 transition={{ duration: 0.5 }}
                                 className="text-3xl font-bold font-philosopher tracking-tighter sm:text-5xl text-center "
                             >
-                                <span className="inline-block px-4 transform -skew-y-2 bg-violet-200 dark:bg-black font-bold font-philosopher text-violet-800">
+                                <span className="inline-block px-4 transform -skew-y-2 bg-violet-200 dark:bg-[#080909] font-bold font-philosopher dark:text-violet-600 text-[#000054]">
                                     <span className="transform skew-y-2 inline-block">
                                         What Our Users Say
                                     </span>
@@ -349,7 +358,7 @@ export default function Home() {
                             </motion.h2>
 
                             <motion.div className="grid gap-6 mt-6 items-stretch md:grid-cols-2 lg:grid-cols-3 md:max-w-full max-w-sm mx-auto">
-                                <Card className="h-full">
+                                <Card className="h-full dark:bg-[#161716] bg-violet-50">
                                     <CardContent className="flex flex-col items-center space-y-4 p-6 justify-between">
                                         <Avatar className="w-16 h-16">
                                             <AvatarImage
@@ -359,7 +368,7 @@ export default function Home() {
                                             <AvatarFallback>ST</AvatarFallback>
                                         </Avatar>
                                         <div className="space-y-2 text-center">
-                                            <h3 className="text-xl font-bold">
+                                            <h3 className="text-xl font-bold font-philosopher">
                                                 Sujith T S{" "}
                                             </h3>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -374,7 +383,7 @@ export default function Home() {
                                         </div>
                                     </CardContent>
                                 </Card>
-                                <Card className="h-full dark:bg-black/80 bg-violet-50">
+                                <Card className="h-full dark:bg-[#161716] bg-violet-50">
                                     <CardContent className="flex flex-col items-center space-y-4 p-6 justify-between">
                                         <Avatar className="w-16 h-16">
                                             <AvatarImage
@@ -386,7 +395,7 @@ export default function Home() {
                                             </AvatarFallback>
                                         </Avatar>
                                         <div className="space-y-2 text-center">
-                                            <h3 className="text-xl font-bold">
+                                            <h3 className="text-xl font-bold font-philosopher">
                                                 Jelan Mathew James
                                             </h3>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -401,7 +410,7 @@ export default function Home() {
                                         </div>
                                     </CardContent>
                                 </Card>
-                                <Card className="h-full">
+                                <Card className="h-full  dark:bg-[#161716] bg-violet-50">
                                     <CardContent className="flex flex-col items-center space-y-4 p-6 justify-between">
                                         <Avatar className="w-16 h-16">
                                             <AvatarImage
@@ -411,7 +420,7 @@ export default function Home() {
                                             <AvatarFallback>JS</AvatarFallback>
                                         </Avatar>
                                         <div className="space-y-2 text-center">
-                                            <h3 className="text-xl font-bold">
+                                            <h3 className="text-xl font-bold font-philosopher">
                                                 Joel Siby Varghese
                                             </h3>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -437,7 +446,7 @@ export default function Home() {
                         <div className="container px-4 md:px-6">
                             <div className="flex flex-col items-center space-y-4 text-center">
                                 <div className="space-y-2">
-                                    <h2 className="text-3xl font-philosopher  font-bold tracking-tighter sm:text-5xl">
+                                    <h2 className="text-3xl font-philosopher text-[#000054] dark:text-slate-200  font-bold tracking-tighter sm:text-5xl">
                                         Join GradSpace Today
                                     </h2>
                                     <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
@@ -449,7 +458,7 @@ export default function Home() {
                                 </div>
                                 <div className="w-full max-w-sm space-y-2">
                                     <Link to="/signup">
-                                        <Button className="w-full text-xl font-bold font-philosopher">
+                                        <Button className="w-full bg-[#000054] dark:bg-slate-200 text-xl font-bold font-philosopher">
                                             Sign up Now
                                         </Button>
                                     </Link>
