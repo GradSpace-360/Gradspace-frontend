@@ -80,7 +80,7 @@ const EmailVerificationPage: React.FC = () => {
             const verificationCode = code.join("")
             try {
                 await verifyEmail(verificationCode)
-                navigate("/")
+                navigate("/login")
             } catch (error) {
                 console.error(error)
             }
