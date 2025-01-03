@@ -42,8 +42,8 @@ const ForgotPasswordPage: React.FC = () => {
 
     // Handler for form submission
     const handleForgotPassword = async (data: ForgotPasswordFormData) => {
-        await forgotPassword(data.email)
         setIsSubmitted(true)
+        await forgotPassword(data.email)
     }
 
     return (
