@@ -76,12 +76,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
         set({ isLoading: true, error: null })
         console.log("verify", code)
         try {
-            const res = await axios.post(`${API_URL}/api/auth/verify-email`, {
+            await axios.post(`${API_URL}/api/auth/verify-email`, {
                 code,
             })
             set({
-                user: res.data.user,
-                isAuthenticated: true,
+                // redirect to login page after verifying email,
+                // dont set isAuthenticated to true here, because the user is not logged in yet
+                // the user data is set in the login function, otherwise /login will redirect to /dashboard
                 isLoading: false,
             })
         } catch (error) {
