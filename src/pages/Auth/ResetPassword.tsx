@@ -11,6 +11,7 @@ import { Lock } from "lucide-react"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { Link, useNavigate, useParams } from "react-router-dom"
+import { PulseLoader } from "react-spinners"
 
 import welcomeImg from "@/assets/3d-casual-life-business-woman-working-on-laptop-while-sitting-on-floor.png"
 import DotBackground from "@/components/DotBackground"
@@ -133,9 +134,13 @@ const ResetPasswordPage: React.FC = () => {
                                     className="w-[70%] flex justify-center items-center bg-gradient-to-r from-violet-500 to-violet-800 text-white font-semibold py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-white"
                                     disabled={isLoading}
                                 >
-                                    {isLoading
-                                        ? "Resetting..."
-                                        : "Set New Password"}{" "}
+                                    {isLoading ? (
+                                        <>
+                                            Resetting <PulseLoader />
+                                        </>
+                                    ) : (
+                                        "Set New Password"
+                                    )}{" "}
                                 </button>
                             </motion.div>
                         </form>
