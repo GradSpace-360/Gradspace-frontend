@@ -11,6 +11,7 @@ import { PulseLoader } from "react-spinners"
 
 import welcomeImg from "@/assets/3d-casual-life-busy-female-student-min.png"
 import DotBackground from "@/components/DotBackground"
+import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
@@ -59,7 +60,7 @@ const ForgotPasswordPage: React.FC = () => {
             <div className="flex justify-center items-center w-full sm:w-1/2">
                 <Card className="w-full max-w-md z-50 bg-transparent border-0 shadow-none">
                     <CardHeader className="space-y-1">
-                        <CardTitle className="text-3xl mb-10 font-bold text-center bg-gradient-to-r from-violet-500 to-violet-800 text-transparent bg-clip-text font-philosopher">
+                        <CardTitle className="text-3xl mb-10 font-bold text-center  font-philosopher">
                             Forgot Password
                         </CardTitle>
                     </CardHeader>
@@ -71,7 +72,7 @@ const ForgotPasswordPage: React.FC = () => {
                             >
                                 <div>
                                     <div className="relative">
-                                        <Mail className="absolute left-3 text-violet-700 top-1/2 transform -translate-y-1/2" />{" "}
+                                        <Mail className="absolute left-3 text-black/80 dark:text-white top-1/2 transform -translate-y-1/2" />{" "}
                                         <Input
                                             placeholder="Email Address"
                                             type="email"
@@ -93,9 +94,9 @@ const ForgotPasswordPage: React.FC = () => {
                                     whileTap={{ scale: 0.98 }}
                                     className="w-full flex justify-center"
                                 >
-                                    <button
+                                    <Button
                                         type="submit"
-                                        className="w-[70%] flex justify-center items-center bg-gradient-to-r from-violet-500 to-violet-800 text-white font-semibold py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-white"
+                                        className="w-[70%] "
                                         disabled={isLoading}
                                     >
                                         Send Reset Link
@@ -104,7 +105,7 @@ const ForgotPasswordPage: React.FC = () => {
                                             color="#ffffff"
                                             size={10}
                                         />
-                                    </button>
+                                    </Button>
                                 </motion.div>
                             </form>
                         ) : (
@@ -133,7 +134,7 @@ const ForgotPasswordPage: React.FC = () => {
                         <div className="text-center">
                             <Link
                                 to="/login"
-                                className="text-sm text-violet-600 dark:text-violet-400 hover:underline flex items-center justify-center"
+                                className="text-sm hover:underline flex items-center justify-center"
                             >
                                 Back to Login
                             </Link>

@@ -56,7 +56,7 @@ export const StickyScroll = ({
                                 className={cn(
                                     "text-4xl font-bold mb-10 font-philosopher  ",
                                     activeCard === index
-                                        ? "opacity-100 text-[#000054] dark:text-violet-600"
+                                        ? "opacity-100 text-black dark:text-white"
                                         : "opacity-20 text-slate-900 dark:text-slate-100"
                                 )}
                             >

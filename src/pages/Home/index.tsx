@@ -19,8 +19,10 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Link as ScrollLink } from "react-scroll"
 
-import alumniSvg from "@/assets/alumni1.svg"
+import alumniSvg from "@/assets/alumni2.png"
+import alumniSvg2 from "@/assets/alumni3.png"
 import collegeSvg from "@/assets/college.svg"
+import AnimatedShinyText from "@/components/ui/animated-shiny-text"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -142,7 +144,12 @@ export default function Home() {
                     <div className="flex items-center justify-center md:py-3 py-20 min-h-screen">
                         <img
                             src={alumniSvg}
-                            className="hidden sm:block h-[500px] mb-20"
+                            className="hidden  dark:sm:block h-[500px] mb-20"
+                            alt="alumi"
+                        />
+                        <img
+                            src={alumniSvg2}
+                            className="hidden dark:hidden  sm:block h-[500px] mb-20"
                             alt="alumi"
                         />
                         <motion.img
@@ -160,11 +167,11 @@ export default function Home() {
                                     initial={{ opacity: 0, y: 50 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="flex flex-col items-center space-y-4 text-center text-[#000054] dark:text-[#FFFEFE]"
+                                    className="flex flex-col items-center space-y-4 text-center text-[#000000] dark:text-[#FFFEFE]"
                                 >
                                     <h1 className="mb-6 text-5xl font-bold font-philosopher tracking-tighter md:text-6xl relative ">
                                         <div>
-                                            <span className="inline-block px-4 transform skew-y-2 bg-violet-300 dark:bg-[#1B1B1B] dark:text-violet-400 text-black/90">
+                                            <span className="inline-block px-4 transform skew-y-2 rounded-bl-2xl bg-black/50 dark:bg-white/50 dark:text-black text-white/90">
                                                 <span className="transform -skew-y-2 inline-block">
                                                     Simplify
                                                 </span>
@@ -174,7 +181,7 @@ export default function Home() {
 
                                         <>
                                             Network,{" "}
-                                            <span className="inline-block px-4 transform -skew-y-2 bg-violet-300  dark:bg-[#1B1B1B] dark:text-violet-400 text-black/90">
+                                            <span className="inline-block px-4 transform -skew-y-2 rounded-br-2xl bg-black/50 dark:bg-white/50 dark:text-black text-white/90">
                                                 <span className="transform skew-y-2 inline-block">
                                                     Amplify
                                                 </span>
@@ -198,12 +205,12 @@ export default function Home() {
                                                 className={cn(
                                                     "inline-block px-4",
                                                     "transform -skew-y-2",
-                                                    "bg-violet-200 dark:bg-black font-bold font-philosopher text-violet-900"
+                                                    "bg-violet-200 dark:bg-black/70 rounded-md font-bold font-philosopher dark:text-white text-black"
                                                 )}
                                             >
-                                                <span className="transform p-1 skew-y-2 inline-block">
+                                                <span className="transform p-1  skew-y-2 inline-block">
                                                     {" "}
-                                                    GradSpace
+                                                    gradSpace
                                                 </span>
                                             </span>
                                             connects it for you? From{" "}
@@ -217,10 +224,9 @@ export default function Home() {
                                             , events to meaningful connections –
                                             empower your journey with the
                                             perfect{" "}
-                                            <span className="text-violet-600">
+                                            <AnimatedShinyText>
                                                 student-alumni synergy
-                                            </span>
-                                            !
+                                            </AnimatedShinyText>
                                         </p>
                                     </motion.div>
                                     <motion.div
@@ -233,9 +239,7 @@ export default function Home() {
                                         className="gap-5 flex"
                                     >
                                         <Link to="/signup">
-                                            <Button className="bg-violet-900 dark:text-white dark:bg-violet-900">
-                                                Get Started
-                                            </Button>
+                                            <Button>Get Started</Button>
                                         </Link>
                                         <ScrollLink
                                             key="learn_more"
@@ -294,7 +298,7 @@ export default function Home() {
                                 transition={{ duration: 0.5 }}
                                 className="text-3xl font-bold font-philosopher tracking-tighter sm:text-5xl text-center mb-12 text-gray-900 dark:text-gray-100"
                             >
-                                <span className="inline-block px-4 transform -skew-y-http://localhost:5173/2 bg-violet-200 dark:bg-[#080909] font-bold font-philosopher dark:text-violet-600 text-[#000054]">
+                                <span className="inline-block px-4 transform -skew-y-http://localhost:5173/2 bg-violet-200 dark:bg-[#080909] font-bold font-philosopher ">
                                     <span className="transform skew-y-2 inline-block">
                                         Key Features
                                     </span>
@@ -350,7 +354,7 @@ export default function Home() {
                                 transition={{ duration: 0.5 }}
                                 className="text-3xl font-bold font-philosopher tracking-tighter sm:text-5xl text-center "
                             >
-                                <span className="inline-block px-4 transform -skew-y-2 bg-violet-200 dark:bg-[#080909] font-bold font-philosopher dark:text-violet-600 text-[#000054]">
+                                <span className="inline-block px-4 transform -skew-y-2 bg-violet-200 dark:bg-[#080909] font-bold font-philosopher ">
                                     <span className="transform skew-y-2 inline-block">
                                         What Our Users Say
                                     </span>
@@ -446,7 +450,7 @@ export default function Home() {
                         <div className="container px-4 md:px-6">
                             <div className="flex flex-col items-center space-y-4 text-center">
                                 <div className="space-y-2">
-                                    <h2 className="text-3xl font-philosopher text-[#000054] dark:text-slate-200  font-bold tracking-tighter sm:text-5xl">
+                                    <h2 className="text-3xl font-philosopher  font-bold tracking-tighter sm:text-5xl">
                                         Join GradSpace Today
                                     </h2>
                                     <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
@@ -458,7 +462,7 @@ export default function Home() {
                                 </div>
                                 <div className="w-full max-w-sm space-y-2">
                                     <Link to="/signup">
-                                        <Button className="w-full bg-[#000054] dark:bg-slate-200 text-xl font-bold font-philosopher">
+                                        <Button className="w-full text-xl font-bold font-philosopher">
                                             Sign up Now
                                         </Button>
                                     </Link>

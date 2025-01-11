@@ -12,6 +12,7 @@ import { PulseLoader } from "react-spinners"
 
 import welcomeImg from "@/assets/3d-casual-life-busy-female-student-min.png"
 import DotBackground from "@/components/DotBackground"
+import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
@@ -108,7 +109,7 @@ const EmailVerificationPage: React.FC = () => {
             <div className="flex justify-center items-center w-full sm:w-1/2">
                 <Card className="w-full max-w-md z-50 bg-transparent border-0 shadow-none">
                     <CardHeader className="space-y-1">
-                        <CardTitle className="text-3xl mb-10 font-bold text-center bg-gradient-to-r from-violet-500 to-violet-800 text-transparent bg-clip-text font-philosopher">
+                        <CardTitle className="text-3xl mb-10 font-bold text-center font-philosopher">
                             Verify Your Email
                         </CardTitle>
                     </CardHeader>
@@ -133,7 +134,7 @@ const EmailVerificationPage: React.FC = () => {
                                         onKeyDown={(e) =>
                                             handleKeyDown(index, e)
                                         }
-                                        className="w-12 h-12 text-center text-2xl font-bold bg-violet-100 dark:bg-[#232b2b] text-violet-700 dark:text-white border-2 border-violet-300 dark:border-violet-700 rounded-lg focus:border-violet-500 focus:outline-none"
+                                        className="w-12 h-12 text-center text-2xl font-bold bg-violet-100 dark:bg-[#232b2b]  border-2 border-violet-300  rounded-lg focus:border-violet-500 focus:outline-none"
                                     />
                                 ))}
                             </div>
@@ -147,9 +148,9 @@ const EmailVerificationPage: React.FC = () => {
                                 whileTap={{ scale: 0.98 }}
                                 className="w-full flex justify-center"
                             >
-                                <button
+                                <Button
                                     type="submit"
-                                    className="w-[70%] flex justify-center items-center bg-gradient-to-r from-violet-500 to-violet-800 text-white font-semibold py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-white"
+                                    className="w-[70%]  "
                                     disabled={
                                         isLoading ||
                                         code.some((digit) => !digit)
@@ -163,13 +164,13 @@ const EmailVerificationPage: React.FC = () => {
                                     ) : (
                                         "Verify Email"
                                     )}
-                                </button>
+                                </Button>
                             </motion.div>
                         </form>
                     </CardContent>
                     <CardFooter>
                         <div className="text-center w-full">
-                            <p className="text-sm text-violet-600 dark:text-violet-400">
+                            <p className="text-sm ">
                                 Didn't receive the code?{" "}
                                 <button className="hover:underline font-semibold">
                                     Resend
