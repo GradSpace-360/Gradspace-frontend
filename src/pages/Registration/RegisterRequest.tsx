@@ -15,7 +15,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select" // Import Select components
+} from "@/components/ui/select"
 
 import ManualVerificationPending from "./ManualVerificationPending"
 import RegistrationRejected from "./RegistrationRejected"
@@ -27,7 +27,7 @@ interface RegisterRequestFormData {
     batch: string
     email: string
     phone_number: string
-    role: "Alumni" | "Student" | "Faculty" // Add role field
+    role: "Alumni" | "Student" | "Faculty"
 }
 
 type RegistrationStatus =
@@ -174,14 +174,38 @@ export default function RegisterRequest() {
                                                 >
                                                     Department
                                                 </label>
-                                                <Input
-                                                    id="department"
-                                                    placeholder="e.g. Computer Science"
-                                                    {...register("department", {
-                                                        required:
-                                                            "Department is required",
-                                                    })}
-                                                />
+                                                <Select
+                                                    onValueChange={(value) =>
+                                                        setValue(
+                                                            "department",
+                                                            value
+                                                        )
+                                                    }
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select your department" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="CSE">
+                                                            Computer Science and
+                                                            Engineering (CSE)
+                                                        </SelectItem>
+                                                        <SelectItem value="EEE">
+                                                            Electrical and
+                                                            Electronics
+                                                            Engineering (EEE)
+                                                        </SelectItem>
+                                                        <SelectItem value="ECE">
+                                                            Electronics and
+                                                            Communication
+                                                            Engineering (ECE)
+                                                        </SelectItem>
+                                                        <SelectItem value="ME">
+                                                            Mechanical
+                                                            Engineering (ME)
+                                                        </SelectItem>
+                                                    </SelectContent>
+                                                </Select>
                                                 {errors.department && (
                                                     <p className="text-sm text-red-500">
                                                         {
