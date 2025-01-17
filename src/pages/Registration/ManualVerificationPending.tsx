@@ -14,7 +14,7 @@ export default function ManualVerificationPending() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="max-w-4xl mx-auto space-y-8 p-6 md:p-10 "
+            className="max-w-4xl mx-auto space-y-8 p-6 md:p-10"
         >
             {/* Header Section */}
             <div className="space-y-6">
@@ -45,7 +45,7 @@ export default function ManualVerificationPending() {
                             key={index}
                             className="flex items-start space-x-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700"
                         >
-                            <div className="bg-primary dark:bg-primary-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
+                            <div className="bg-primary dark:text-black font-bold text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
                                 {index + 1}
                             </div>
                             <span className="text-base text-gray-700 dark:text-gray-300">
@@ -77,7 +77,7 @@ export default function ManualVerificationPending() {
                 </p>
                 <Button
                     onClick={handleContactSupport}
-                    className="w-full sm:w-auto bg-primary dark:bg-primary-500 hover:bg-primary/90 dark:hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+                    className="w-full sm:w-auto bg-primary dark:bg-primary-600 hover:bg-primary/90 dark:hover:bg-primary-700 text-white dark:text-black font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
                 >
                     <Mail className="mr-2 h-5 w-5" />
                     Contact Support
