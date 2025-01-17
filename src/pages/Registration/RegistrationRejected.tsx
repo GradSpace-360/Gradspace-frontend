@@ -76,15 +76,15 @@ export default function RegistrationRejected() {
             </div>
 
             {/* Contact Section */}
-            <div className="flex flex-col items-center justify-center space-y-6 bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
-                <p className="text-xl font-semibold text-center text-blue-600 dark:text-blue-400">
+            <div className="flex flex-col items-center opacity-85 justify-center space-y-1 ">
+                <p className="text-xl  text-center">
                     For further inquiries, please contact us:
                 </p>
                 <a
                     href="mailto:gradspace338@gmail.com"
-                    className="flex items-center justify-center space-x-3 text-blue-600 dark:text-blue-400 hover:underline text-xl font-bold transition-colors duration-200 hover:text-blue-700 dark:hover:text-blue-300"
+                    className="flex items-center justify-center space-x-3 opacity-85 hover:underline text-xl  transition-colors duration-200 hover:text-blue-700 dark:hover:text-blue-300"
                 >
-                    <Mail className="h-8 w-8" />
+                    <Mail className="h-6 w-6" />
                     <span>gradspace338@gmail.com</span>
                 </a>
             </div>
