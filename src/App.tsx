@@ -21,6 +21,10 @@ const HomePage = lazy(() => import("./pages/Home"))
 const PageNotFound = lazy(() => import("./pages/PageNotFound"))
 const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"))
 const RedirectRoute = lazy(() => import("./routes/RedirectRoute"))
+const OnboardingPage = lazy(() => import("./pages/Onboard"))
+const RegisterRequestPage = lazy(
+    () => import("./pages/Registration/RegisterRequest")
+)
 
 const App = () => {
     const { isCheckingAuth, checkAuth, user } = useAuthStore()
@@ -44,6 +48,11 @@ const App = () => {
                             <HomePage />
                         </RedirectRoute>
                     }
+                />
+                <Route path="/onboard" element={<OnboardingPage />} />
+                <Route
+                    path="/register-request"
+                    element={<RegisterRequestPage />}
                 />
                 <Route
                     path="/login"
