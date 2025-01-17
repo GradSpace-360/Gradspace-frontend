@@ -22,6 +22,14 @@ export type SocialLinks = {
     website: string
     resume: string
 }
+export type Education = {
+    institutionName: string
+    course: string
+    location: string
+    startDate: string
+    endDate: string
+    grade: string
+}
 
 export type OnboardingState = {
     step: number
@@ -32,6 +40,7 @@ export type OnboardingState = {
         location: string
         skills: string[]
         interests: string[]
+        education: Education[] // Add education field
         experience: Experience[]
         socialLinks: SocialLinks
     }
