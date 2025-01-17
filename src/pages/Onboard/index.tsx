@@ -12,6 +12,7 @@ import { AnimatePresence } from "framer-motion"
 import onBoardImg from "@/assets/3d-casual-life-business-woman-working-on-laptop-while-sitting-on-floor.png"
 import DotBackground from "@/components/DotBackground"
 import { CompletionStep } from "@/components/onboarding/CompletionStep"
+import { EducationStep } from "@/components/onboarding/EducationStep"
 import { ExperienceStep } from "@/components/onboarding/ExperienceStep"
 import { ProgressBar } from "@/components/onboarding/ProgressBar"
 import { SkillsStep } from "@/components/onboarding/SkillsStep"
@@ -61,9 +62,10 @@ export default function Onboarding() {
                         <AnimatePresence mode="wait">
                             {step === 1 && <WelcomeStep key="welcome" />}
                             {step === 2 && <SkillsStep key="skills" />}
-                            {step === 3 && <ExperienceStep key="experience" />}
-                            {step === 4 && <SocialStep key="social" />}
-                            {step === 5 && <CompletionStep key="completion" />}
+                            {step === 3 && <EducationStep key="education" />} /
+                            {step === 4 && <ExperienceStep key="experience" />}
+                            {step === 5 && <SocialStep key="social" />}
+                            {step === 6 && <CompletionStep key="completion" />}
                         </AnimatePresence>
                     </div>
                 </div>
