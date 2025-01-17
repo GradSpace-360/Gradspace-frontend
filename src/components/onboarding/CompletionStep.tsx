@@ -117,6 +117,33 @@ export function CompletionStep() {
                                 ))}
                             </div>
                         </div>
+                        {formData.education.length > 0 && (
+                            <div>
+                                <h4 className="font-medium mb-2">Education</h4>
+                                <div className="space-y-2">
+                                    {formData.education.map((edu, index) => (
+                                        <div
+                                            key={index}
+                                            className="p-3 bg-muted rounded"
+                                        >
+                                            <p className="font-semibold">
+                                                {edu.course} at{" "}
+                                                {edu.institutionName}
+                                            </p>
+                                            <p className="text-sm text-muted-foreground">
+                                                {edu.startDate} - {edu.endDate}
+                                            </p>
+                                            <p className="text-sm">
+                                                {edu.location}
+                                            </p>
+                                            <p className="text-sm">
+                                                Grade: {edu.grade}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {formData.experience.length > 0 && (
                             <div>
@@ -199,7 +226,7 @@ export function CompletionStep() {
             </Card>
 
             <div className="flex justify-center gap-4">
-                <Button variant="outline" onClick={() => setStep(4)}>
+                <Button variant="outline" onClick={() => setStep(5)}>
                     Back
                 </Button>
                 <Button onClick={handleSubmit} disabled={isSubmitting}>
