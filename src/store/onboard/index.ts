@@ -22,6 +22,7 @@ const initialState: OnboardingState = {
         location: "",
         skills: [],
         interests: [],
+        education: [],
         experience: [],
         socialLinks: {
             github: "",
