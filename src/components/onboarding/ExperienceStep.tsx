@@ -65,7 +65,7 @@ export function ExperienceStep() {
 
     const handleNext = () => {
         setFormData({ experience: experiences })
-        setStep(4)
+        setStep(5)
     }
 
     return (
@@ -331,7 +331,7 @@ export function ExperienceStep() {
             )}
 
             <div className="flex justify-center gap-4">
-                <Button variant="outline" onClick={() => setStep(2)}>
+                <Button variant="outline" onClick={() => setStep(3)}>
                     Previous
                 </Button>
                 <Button onClick={handleNext}>Next Step</Button>

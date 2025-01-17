@@ -57,7 +57,7 @@ export function SocialStep() {
 
     const onSubmit = (data: SocialLinks) => {
         setFormData({ socialLinks: data })
-        setStep(5)
+        setStep(6)
     }
 
     return (
@@ -127,7 +127,7 @@ export function SocialStep() {
                 <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setStep(3)}
+                    onClick={() => setStep(4)}
                 >
                     Previous
                 </Button>
