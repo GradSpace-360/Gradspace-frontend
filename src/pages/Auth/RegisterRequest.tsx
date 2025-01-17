@@ -190,7 +190,7 @@ export default function RegisterRequest() {
                                                     htmlFor="batch"
                                                     className="block text-sm font-medium"
                                                 >
-                                                    Batch (Start Year)
+                                                    Batch
                                                 </label>
                                                 <Input
                                                     id="batch"
