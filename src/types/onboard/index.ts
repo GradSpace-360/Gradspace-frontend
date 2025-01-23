@@ -40,7 +40,7 @@ export type OnboardingState = {
         location: string
         skills: string[]
         interests: string[]
-        education: Education[] // Add education field
+        education: Education[]
         experience: Experience[]
         socialLinks: SocialLinks
     }
@@ -50,4 +50,5 @@ export type OnboardingStore = OnboardingState & {
     setStep: (step: number) => void
     setFormData: (data: Partial<OnboardingState["formData"]>) => void
     reset: () => void
+    submitFormData: () => Promise<void>
 }

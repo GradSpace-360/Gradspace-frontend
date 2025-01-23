@@ -7,8 +7,6 @@
     
    future work: display full name , department, batch and  email in the completion step from the auth contexts
 */
-
-import axios from "axios"
 import { motion } from "framer-motion"
 import { FileText, Github, Globe, Instagram, Linkedin } from "lucide-react"
 import { useState } from "react"
@@ -20,29 +18,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useOnboardingStore } from "@/store/onboard"
 
 export function CompletionStep() {
-    const { formData, reset, setStep } = useOnboardingStore()
+    const { formData, setStep, submitFormData } = useOnboardingStore()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const navigate = useNavigate()
 
     const handleSubmit = async () => {
         setIsSubmitting(true)
         try {
-            console.log("Form Data being sent:", formData)
-
-            const formDataToSend = new FormData()
-            Object.entries(formData).forEach(([key, value]) => {
-                if (value !== null && value !== undefined) {
-                    formDataToSend.append(key, JSON.stringify(value))
-                }
-            })
-
-            await axios.post("/api/onboard", formDataToSend, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            })
-
-            reset()
+            await submitFormData()
             navigate("/dashboard")
         } catch (error) {
             console.error("Submission failed:", error)
