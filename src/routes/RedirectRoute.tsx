@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/auth"
 const RedirectRoute: React.FC<{ children: ReactNode }> = ({ children }) => {
     const { isAuthenticated, user } = useAuthStore()
 
-    return isAuthenticated && user?.isVerified ? (
+    return isAuthenticated && user?.is_verified ? (
         <Navigate to="/dashboard" replace />
     ) : (
         <>{children}</>
