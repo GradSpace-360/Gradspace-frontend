@@ -36,7 +36,7 @@ const UserDashboard = () => {
                     </h3>
                     <p className="">
                         <span className="font-bold">Joined: </span>
-                        {new Date(user.createdAt).toLocaleDateString("en-US", {
+                        {new Date(user.created_at).toLocaleDateString("en-US", {
                             year: "numeric",
                             month: "long",
                             day: "numeric",
@@ -45,7 +45,7 @@ const UserDashboard = () => {
                     <p className="">
                         <span className="font-bold">Last Login: </span>
 
-                        {formatDate(new Date(user.lastLogin).toISOString())}
+                        {formatDate(new Date(user.updated_at).toISOString())}
                     </p>
                 </motion.div>
             </div>
