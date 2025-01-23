@@ -12,9 +12,7 @@ import { CustomError } from "@/types/common"
 
 import { AuthStore } from "../../types/auth"
 axios.defaults.withCredentials = true // to send cookies with requests
-
-const API_URL =
-    import.meta.env.MODE === "development" ? "http://localhost:5000" : ""
+import { axiosPrivate } from "@/config/axiosInstance"
 
 /*
 zustand's create function is used to create a store.
@@ -35,19 +33,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
     isCheckingAuth: true,
     message: null,
 
-    /*
-        sign up function
-        it takes user{name, email, and password} as argument
-        it sends a post request to the server to sign up the user
-        if the request is successful, it sets the user data in the store
-    */
-
     signUp: async (user) => {
         set({ isLoading: true, error: null })
         console.log("signup", user)
         try {
-            const res = await axios.post(`${API_URL}/api/auth/signup`, {
-                username: user.name,
+            const res = await axiosPrivate.post(`/auth/signup/`, {
+                username: user.username,
                 email: user.email,
                 password: user.password,
             })
@@ -66,17 +57,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
             throw error
         }
     },
-    /*
-        verify email function
-        it takes code as argument
-        it sends a post request to the server to verify the email
-        if the request is successful, it sets the user data in the store
-    */
+
     verifyEmail: async (code) => {
         set({ isLoading: true, error: null })
         console.log("verify", code)
         try {
-            await axios.post(`${API_URL}/api/auth/verify-email`, {
+            await axiosPrivate.post(`/auth/verify-email`, {
                 code,
             })
             set({
@@ -97,17 +83,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
         }
     },
 
-    /*
-        check Auth function
-        it sends a get request to the server to check if the user is authenticated
-        if the request is successful, it sets the user data in the store
-    */
     checkAuth: async () => {
         console.log("check auth")
         set({ isCheckingAuth: true, error: null })
         try {
-            // await new Promise((resolve) => setTimeout(resolve, 2000))
-            const res = await axios.get(`${API_URL}/api/auth/check-auth`)
+            const res = await axiosPrivate.get(`/auth/check-auth`)
             set({
                 user: res.data.user,
                 isAuthenticated: true,
@@ -124,16 +104,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
         }
     },
 
-    /*
-        login function
-        it takes email and password as argument
-        it sends a post request to the server to log in the user
-        if the request is successful, it sets the user data in the store
-    */
     login: async (email, password) => {
         console.log("login", email, password)
         try {
-            const res = await axios.post(`${API_URL}/api/auth/login`, {
+            const res = await axiosPrivate.post(`/auth/login`, {
                 email,
                 password,
             })
@@ -153,16 +127,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
             throw error
         }
     },
-    /*
-        logout function
-        it sends a post request to the server to log out the user
-        if the request is successful, it sets the user data in the store
-    */
+
     logout: async () => {
         console.log("logout")
         set({ isLoading: true, error: null })
         try {
-            await axios.post(`${API_URL}/api/auth/logout`)
+            await axiosPrivate.post(`/auth/logout`)
             set({
                 user: null,
                 isAuthenticated: false,
@@ -174,23 +144,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
             throw error
         }
     },
-    /*
-        forgot password function
-        it takes email as argument
-        it sends a post request to the server to send a reset password email
-        if the request is successful, it sets the message in the store
-    */
 
     forgotPassword: async (email) => {
         console.log("forgot", email)
         set({ isLoading: true, error: null })
         try {
-            const res = await axios.post(
-                `${API_URL}/api/auth/forgot-password`,
-                {
-                    email,
-                }
-            )
+            const res = await axiosPrivate.post(`/auth/forgot-password`, {
+                email,
+            })
             set({ message: res.data.message, isLoading: false })
         } catch (error) {
             const customError = error as CustomError
@@ -203,12 +164,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
             throw error
         }
     },
-    /*
-        reset password function
-        it takes token and password as argument
-        it sends a post request to the server to reset the password
-        if the request is successful, it sets the message in the store
-    */
+
     resetPassword: async (token, password) => {
         console.log("reset", token, password)
 
@@ -216,8 +172,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
         try {
             // a small delay
             await new Promise((resolve) => setTimeout(resolve, 1000))
-            const res = await axios.post(
-                `${API_URL}/api/auth/reset-password/${token}`,
+            const res = await axiosPrivate.post(
+                `/auth/reset-password/${token}`,
                 {
                     password,
                 }
