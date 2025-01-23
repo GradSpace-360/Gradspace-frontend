@@ -22,6 +22,12 @@ const PageNotFound = lazy(() => import("./pages/PageNotFound"))
 const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"))
 const RedirectRoute = lazy(() => import("./routes/RedirectRoute"))
 const OnboardingPage = lazy(() => import("./pages/Onboard"))
+const ManualVerificationPending = lazy(
+    () => import("./pages/Registration/ManualVerificationPending")
+)
+const ManualVerificationRejected = lazy(
+    () => import("./pages/Registration/RegistrationRejected")
+)
 const RegisterRequestPage = lazy(
     () => import("./pages/Registration/RegisterRequest")
 )
@@ -49,11 +55,34 @@ const App = () => {
                         </RedirectRoute>
                     }
                 />
+
+                {/* wrap the onboard , register-endpoints by ProtectedRoute.*/}
                 <Route path="/onboard" element={<OnboardingPage />} />
                 <Route
                     path="/register-request"
-                    element={<RegisterRequestPage />}
+                    element={
+                        // <ProtectedRoute>
+                        <RegisterRequestPage />
+                        // <ProtectedRoute>
+                    }
                 />
+                <Route
+                    path="/register-pending"
+                    element={
+                        // <ProtectedRoute>
+                        <ManualVerificationPending />
+                        // </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/register-rejected"
+                    element={
+                        // <ProtectedRoute>
+                        <ManualVerificationRejected />
+                        // </ProtectedRoute>
+                    }
+                />
+
                 <Route
                     path="/login"
                     element={
@@ -72,7 +101,11 @@ const App = () => {
                 />
                 <Route
                     path="/verify-email"
-                    element={<EmailVerificationPage />}
+                    element={
+                        // <ProtectedRoute>
+                        <EmailVerificationPage />
+                        // </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="/forgot-password"
