@@ -2,22 +2,17 @@ export interface User {
     id: string
     username: string
     email: string
-    password: string
-    isVerified: boolean
+    is_verified: boolean
     is_onboard: boolean
     registration_status:
         | "pending"
         | "registered"
         | "rejected"
         | "not_registered"
-    resetPasswordToken?: string
-    resetPasswordExpiresAt?: Date
-    verificationToken?: string
-    verificationTokenExpiresAt?: Date
-    createdAt: Date
-    updatedAt: Date
+    created_at: Date
+    updated_at: Date
     role: "Admin" | "Student" | "Faculty" | "Alumni"
-    [key: string]: any // For any additional or dynamic user fields
+    // [key: string]: any // For any additional or dynamic user fields
 }
 
 export interface AuthStore {
