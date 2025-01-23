@@ -5,18 +5,22 @@ import { Toaster } from "react-hot-toast"
 import { BrowserRouter } from "react-router-dom"
 
 import App from "./App.tsx"
+import { ThemeProvider } from "./context/ThemProvider.tsx"
 
 createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
-        <App />
-        <Toaster
-            toastOptions={{
-                style: {
-                    padding: "7px",
-                    border: "2px solid #E1C6E6",
-                    zIndex: 9999,
-                },
-            }}
-        />
+        <ThemeProvider>
+            <App />
+            <Toaster
+                position="bottom-right"
+                toastOptions={{
+                    style: {
+                        padding: "7px",
+                        border: "2px solid #E1C6E6",
+                        zIndex: 9999,
+                    },
+                }}
+            />
+        </ThemeProvider>
     </BrowserRouter>
 )

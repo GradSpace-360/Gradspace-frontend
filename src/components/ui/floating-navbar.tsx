@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import {
     motion,
     AnimatePresence,
@@ -11,8 +11,9 @@ import { cn } from "@/lib/utils"
 import { Link as ScrollLink } from "react-scroll" // For smooth scrolling
 import { Link as RouterLink } from "react-router-dom" // For routing
 import { Moon, Sun } from "lucide-react"
+import { useTheme } from "@/context/ThemProvider"
 
-export const FloatingNav = ({
+const FloatingNav = ({
     navItems,
     className,
 }: {
@@ -21,20 +22,7 @@ export const FloatingNav = ({
 }) => {
     const { scrollYProgress } = useScroll()
     const [visible, setVisible] = useState(true)
-    const [theme, setTheme] = useState("light")
-
-    useEffect(() => {
-        const savedTheme = localStorage.getItem("theme") || "light"
-        setTheme(savedTheme)
-        document.documentElement.classList.toggle("dark", savedTheme === "dark")
-    }, [])
-
-    const toggleTheme = () => {
-        const newTheme = theme === "light" ? "dark" : "light"
-        setTheme(newTheme)
-        localStorage.setItem("theme", newTheme)
-        document.documentElement.classList.toggle("dark", newTheme === "dark")
-    }
+    const { theme, toggleTheme } = useTheme()
 
     useMotionValueEvent(scrollYProgress, "change", (current) => {
         if (typeof current === "number") {
@@ -43,11 +31,7 @@ export const FloatingNav = ({
             if (scrollYProgress.get() < 0.05) {
                 setVisible(true)
             } else {
-                if (direction < 0) {
-                    setVisible(true)
-                } else {
-                    setVisible(false)
-                }
+                setVisible(direction < 0)
             }
         }
     })
@@ -66,7 +50,7 @@ export const FloatingNav = ({
                 {navItems.map((navItem) => (
                     <ScrollLink
                         key={navItem.name}
-                        to={navItem.link.replace("#", "")} // Remove the '#' for the smooth scroll
+                        to={navItem.link.replace("#", "")}
                         spy={true}
                         smooth={true}
                         duration={500}
@@ -100,3 +84,4 @@ export const FloatingNav = ({
         </AnimatePresence>
     )
 }
+export default FloatingNav

@@ -4,7 +4,7 @@ import { useMotionValueEvent, useScroll } from "framer-motion"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-export const StickyScroll = ({
+const StickyScroll = ({
     content,
 }: {
     content: {
@@ -56,7 +56,7 @@ export const StickyScroll = ({
                                 className={cn(
                                     "text-4xl font-bold mb-10 font-philosopher  ",
                                     activeCard === index
-                                        ? "opacity-100 text-violet-900 dark:text-violet-600"
+                                        ? "opacity-100 text-black dark:text-white"
                                         : "opacity-20 text-slate-900 dark:text-slate-100"
                                 )}
                             >
@@ -86,3 +86,4 @@ export const StickyScroll = ({
         </motion.div>
     )
 }
+export default StickyScroll
