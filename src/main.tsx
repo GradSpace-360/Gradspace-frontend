@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
         <ThemeProvider>
             <App />
             <Toaster
-                position="bottom-center"
+                position="bottom-right"
                 toastOptions={{
                     style: {
                         padding: "7px",
