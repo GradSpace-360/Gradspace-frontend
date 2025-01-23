@@ -13,7 +13,7 @@ import { Link as RouterLink } from "react-router-dom" // For routing
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "@/context/ThemProvider"
 
-export const FloatingNav = ({
+const FloatingNav = ({
     navItems,
     className,
 }: {
@@ -84,3 +84,4 @@ export const FloatingNav = ({
         </AnimatePresence>
     )
 }
+export default FloatingNav
