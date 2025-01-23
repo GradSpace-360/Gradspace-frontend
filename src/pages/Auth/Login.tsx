@@ -12,7 +12,7 @@ import { motion } from "framer-motion"
 import { Lock, Mail } from "lucide-react"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { PulseLoader } from "react-spinners"
 
 import welcomeImg from "@/assets/lifestyle-students-talking-in-front-of-university-1.png"
@@ -35,7 +35,7 @@ interface LoginFormData {
 
 const Login: React.FC = () => {
     const { login, isLoading, error, clearError } = useAuthStore()
-
+    const navigate = useNavigate()
     const {
         register,
         handleSubmit,
@@ -50,6 +50,7 @@ const Login: React.FC = () => {
 
     const handleLogin = async (data: LoginFormData) => {
         await login(data.email, data.password)
+        navigate("/dashboard")
     }
 
     return (
