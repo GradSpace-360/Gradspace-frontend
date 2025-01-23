@@ -33,7 +33,7 @@ import { getStrength } from "@/utils/getStrength"
 interface SignUpFormData {
     email: string
     password: string
-    name: string
+    username: string
 }
 
 const SignUp: React.FC = () => {
@@ -46,7 +46,7 @@ const SignUp: React.FC = () => {
         defaultValues: {
             email: "",
             password: "",
-            name: "",
+            username: "",
         },
     })
     const { signUp, error, isLoading, clearError } = useAuthStore()
@@ -63,7 +63,7 @@ const SignUp: React.FC = () => {
             await signUp({
                 email: data.email,
                 password: data.password,
-                name: data.name,
+                username: data.username,
             })
             navigate("/verify-email")
         } catch (error) {
@@ -106,17 +106,17 @@ const SignUp: React.FC = () => {
                                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black/80 dark:text-white" />
                                     <Input
                                         type="text"
-                                        placeholder="Full Name"
+                                        placeholder="user name"
                                         className="pl-10  bg-gray-200 dark:bg-white/10"
-                                        {...register("name", {
+                                        {...register("username", {
                                             required: "full name is required",
                                         })}
                                     />
                                 </div>
-                                {/* Full Name Error Display */}
-                                {errors.name && (
+                                {/* User name Error Display */}
+                                {errors.username && (
                                     <p className="text-red-500 text-sm">
-                                        {errors.name.message}
+                                        {errors.username.message}
                                     </p>
                                 )}
                             </div>
