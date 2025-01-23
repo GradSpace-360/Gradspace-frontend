@@ -1,4 +1,3 @@
-import axios from "axios"
 import { AnimatePresence, motion } from "framer-motion"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
@@ -16,6 +15,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { axiosPrivate } from "@/config/axiosInstance"
 
 import ManualVerificationPending from "./ManualVerificationPending"
 import RegistrationRejected from "./RegistrationRejected"
@@ -53,7 +53,7 @@ export default function RegisterRequest() {
     ): Promise<void> => {
         try {
             console.log("Submitting registration request:", data)
-            const response = await axios.post("/api/register-request", data)
+            const response = await axiosPrivate.post("/register/request", data)
             if (response.status === 200) {
                 toast.success(
                     "Thank you for your registration request. Within 2 working days, we will verify your profile and inform you so you can proceed to the onboarding process."
