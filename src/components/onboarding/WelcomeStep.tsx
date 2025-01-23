@@ -1,19 +1,3 @@
-/**
- * WelcomeStep Component
- *
- * Manages the initial welcome step in the onboarding process.
- * Allows users to upload a profile picture, enter their professional headline,
- * write a short bio, and specify their location.
- * Handles image validation, preview, and upload.
- * Utilizes React Hook Form for form management and Framer Motion for animations.
-    
-    future work: add user name from auth context to welcome message
-             optimization: 
-                Replace the base64 conversion logic with a file upload API call.
-                Store the returned image URL in the form data instead of the base64 string.
-        
-    */
-
 import { motion } from "framer-motion"
 import { Trash2, Upload } from "lucide-react"
 import { useRef, useState } from "react"
@@ -45,31 +29,48 @@ export function WelcomeStep() {
             location: formData.location,
         },
     })
+
+    // Use a base64 string for previewing the image
     const [previewImage, setPreviewImage] = useState<string | null>(
-        formData.profileImage || null
+        formData.profileImage
+            ? URL.createObjectURL(
+                  new Blob([new Uint8Array(formData.profileImage)], {
+                      type: "image/jpeg",
+                  })
+              )
+            : null
     )
+
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const onSubmit = async (data: WelcomeFormData) => {
         const profileImageFile = fileInputRef.current?.files?.[0]
 
         if (profileImageFile) {
-            const profileImageUrl = await new Promise<string>(
+            const profileImageBinary = await new Promise<ArrayBuffer>(
                 (resolve, reject) => {
                     const reader = new FileReader()
                     reader.onloadend = () => {
-                        resolve(reader.result as string)
+                        if (reader.result instanceof ArrayBuffer) {
+                            resolve(reader.result)
+                        } else {
+                            reject(
+                                new Error(
+                                    "Failed to read the image file as binary data."
+                                )
+                            )
+                        }
                     }
                     reader.onerror = () => {
                         reject(new Error("Failed to read the image file."))
                     }
-                    reader.readAsDataURL(profileImageFile)
+                    reader.readAsArrayBuffer(profileImageFile)
                 }
             )
 
             setFormData({
                 ...formData,
-                profileImage: profileImageUrl,
+                profileImage: profileImageBinary, // Store the binary data
                 headline: data.headline,
                 about: data.about,
                 location: data.location,
@@ -80,7 +81,7 @@ export function WelcomeStep() {
                 headline: data.headline,
                 about: data.about,
                 location: data.location,
-                profileImage: formData.profileImage,
+                profileImage: formData.profileImage, // Keep the existing binary data
             })
         }
 
@@ -110,9 +111,9 @@ export function WelcomeStep() {
 
             const reader = new FileReader()
             reader.onloadend = () => {
-                setPreviewImage(reader.result as string)
+                setPreviewImage(reader.result as string) // Set the base64 URL for preview
             }
-            reader.readAsDataURL(file)
+            reader.readAsDataURL(file) // Read the file as a base64 URL
         } else {
             setPreviewImage(null)
         }
@@ -129,7 +130,7 @@ export function WelcomeStep() {
         }
         setFormData({
             ...formData,
-            profileImage: null,
+            profileImage: null, // Clear the binary data
         })
     }
 

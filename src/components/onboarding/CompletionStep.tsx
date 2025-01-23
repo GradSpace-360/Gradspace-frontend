@@ -4,9 +4,9 @@
  * This component handles the final step of the onboarding process.
  * It allows users to review their profile information and submit the onboarding form.
  * Manages form submission with Axios and provides user feedback during the process.
-    
-   future work: display full name , department, batch and  email in the completion step from the auth contexts
-*/
+ *
+ * future work: display full name, department, batch, and email in the completion step from the auth contexts
+ */
 import { motion } from "framer-motion"
 import { FileText, Github, Globe, Instagram, Linkedin } from "lucide-react"
 import { useState } from "react"
@@ -21,6 +21,15 @@ export function CompletionStep() {
     const { formData, setStep, submitFormData } = useOnboardingStore()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const navigate = useNavigate()
+
+    // Convert binary image data to a URL for display
+    const profileImageUrl = formData.profileImage
+        ? URL.createObjectURL(
+              new Blob([new Uint8Array(formData.profileImage)], {
+                  type: "image/jpeg",
+              })
+          )
+        : null
 
     const handleSubmit = async () => {
         setIsSubmitting(true)
@@ -55,9 +64,9 @@ export function CompletionStep() {
                 <CardContent className="pt-6 space-y-6">
                     <div className="flex flex-col items-center space-y-4">
                         <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                            {formData.profileImage ? (
+                            {profileImageUrl ? (
                                 <img
-                                    src={formData.profileImage}
+                                    src={profileImageUrl}
                                     alt="Profile"
                                     className="w-full h-full object-cover"
                                 />
@@ -100,6 +109,7 @@ export function CompletionStep() {
                                 ))}
                             </div>
                         </div>
+
                         {formData.education.length > 0 && (
                             <div>
                                 <h4 className="font-medium mb-2">Education</h4>
