@@ -33,5 +33,6 @@ export interface AuthStore {
     logout: () => Promise<void>
     forgotPassword: (email: string) => Promise<void>
     resetPassword: (token: string, password: string) => Promise<void>
+    sendVerificationOtp: () => Promise<void>
     clearError: () => void
 }
