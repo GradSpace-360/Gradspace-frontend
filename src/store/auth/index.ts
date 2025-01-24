@@ -57,7 +57,23 @@ export const useAuthStore = create<AuthStore>((set) => ({
             throw error
         }
     },
-
+    sendVerificationOtp: async () => {
+        set({ isLoading: true, error: null })
+        console.log("sendVerificationOtp")
+        try {
+            await axiosPrivate.get(`/auth/send-verification-otp/`)
+            set({ isLoading: false })
+        } catch (error) {
+            const customError = error as CustomError
+            set({
+                error:
+                    customError.response?.data?.message ||
+                    "Error sending verification OTP",
+                isLoading: false,
+            })
+            throw error
+        }
+    },
     verifyEmail: async (code) => {
         set({ isLoading: true, error: null })
         console.log("verify", code)
@@ -65,11 +81,16 @@ export const useAuthStore = create<AuthStore>((set) => ({
             await axiosPrivate.post(`/auth/verify-email`, {
                 code,
             })
+            // set((state) => ({
+            //     isLoading: false,
+            //     user: state.user ? { ...state.user, isVerified: true } : null, // Update the user's isVerified status
+            // }))
+            // since not updating user isVerified status in the store, we can also call checkAuth() to update the user's isVerified status
+            const res = await axiosPrivate.get(`/auth/check-auth`)
             set({
-                // redirect to login page after verifying email,
-                // dont set isAuthenticated to true here, because the user is not logged in yet
-                // the user data is set in the login function, otherwise /login will redirect to /dashboard
-                isLoading: false,
+                user: res.data.user,
+                isAuthenticated: true,
+                isCheckingAuth: false,
             })
         } catch (error) {
             const customError = error as CustomError
@@ -117,6 +138,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
                 error: null,
                 isLoading: false,
             })
+            console.log("User data:", res.data.user)
         } catch (error) {
             const customError = error as CustomError
             set({
