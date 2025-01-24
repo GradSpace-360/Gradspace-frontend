@@ -1,12 +1,17 @@
-/* This component handles the email verification process by allowing users to input a 6-digit verification code.
-It manages input focus, handles code submission, and displays error messages if verification fails.
-Integrates with the authentication store to verify the email and navigate upon successful verification.
-*/
+/**
+ * 
+ * feat(frontend): enhance email verification page with OTP resend cooldown and error handling
 
-"use client"
+- Added a cooldown period for the 'Resend OTP' button to prevent spamming.
+- Improved error handling by clearing OTP fields on verification failure.
+- Added accessibility improvements to OTP input fields.
+- Integrated backend API calls for sending and verifying OTP.
+- Updated UI to display cooldown timer and error messages.
+ */
 
 import { motion } from "framer-motion"
 import { useCallback, useEffect, useRef, useState } from "react"
+import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
 import { PulseLoader } from "react-spinners"
 
@@ -24,14 +29,22 @@ import { useAuthStore } from "@/store/auth"
 
 const EmailVerificationPage: React.FC = () => {
     const [code, setCode] = useState(["", "", "", "", "", ""])
+    const [resendDisabled, setResendDisabled] = useState(false)
+    const [cooldown, setCooldown] = useState(0)
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
     const navigate = useNavigate()
-    const { error, clearError, isLoading, verifyEmail } = useAuthStore()
+    const { error, clearError, isLoading, verifyEmail, sendVerificationOtp } =
+        useAuthStore()
+
     useEffect(clearError, [clearError])
+
+    useEffect(() => {
+        sendVerificationOtp()
+    }, [sendVerificationOtp])
+
     const handleChange = (index: number, value: string) => {
         const newCode = [...code]
 
-        // Handle pasted content
         if (value.length > 1) {
             const pastedCode = value.slice(0, 6).split("")
             for (let i = 0; i < 6; i++) {
@@ -48,7 +61,6 @@ const EmailVerificationPage: React.FC = () => {
                 return -1
             }
 
-            // Focus on the last non-empty input or the first empty one
             const lastFilledIndex = findLastIndex(
                 newCode,
                 (digit) => digit !== ""
@@ -59,7 +71,6 @@ const EmailVerificationPage: React.FC = () => {
             newCode[index] = value
             setCode(newCode)
 
-            // Move focus to the next input field if value is entered
             if (value && index < 5) {
                 inputRefs.current[index + 1]?.focus()
             }
@@ -81,20 +92,45 @@ const EmailVerificationPage: React.FC = () => {
             const verificationCode = code.join("")
             try {
                 await verifyEmail(verificationCode)
-                navigate("/login")
+                toast.success("Email verified successfully")
+                navigate("/dashboard")
             } catch (error) {
                 console.error(error)
+                toast.error("Failed to verify email")
+                setCode(["", "", "", "", "", ""]) // Clear OTP fields on error
             }
         },
         [code, navigate, verifyEmail]
     )
 
-    // Auto submit when all fields are filled
     useEffect(() => {
         if (code.every((digit) => digit !== "")) {
             handleSubmit(new Event("submit") as unknown as React.FormEvent)
         }
     }, [code, handleSubmit])
+
+    const handleResendOTP = async () => {
+        if (resendDisabled) return
+
+        setResendDisabled(true)
+        setCooldown(30)
+
+        try {
+            await sendVerificationOtp()
+        } catch (error) {
+            console.error("Failed to resend OTP:", error)
+        }
+
+        const interval = setInterval(() => {
+            setCooldown((prev) => {
+                if (prev === 1) {
+                    clearInterval(interval)
+                    setResendDisabled(false)
+                }
+                return prev - 1
+            })
+        }, 1000)
+    }
 
     return (
         <div className="flex min-h-screen justify-center">
@@ -134,7 +170,8 @@ const EmailVerificationPage: React.FC = () => {
                                         onKeyDown={(e) =>
                                             handleKeyDown(index, e)
                                         }
-                                        className="w-12 h-12 text-center text-2xl font-bold bg-violet-100 dark:bg-[#232b2b]  border-2 border-violet-300  rounded-lg focus:border-violet-500 focus:outline-none"
+                                        className="w-12 h-12 text-center text-2xl font-bold bg-violet-100 dark:bg-[#232b2b] border-2 border-violet-300 rounded-lg focus:border-violet-500 focus:outline-none"
+                                        aria-label={`OTP digit ${index + 1}`}
                                     />
                                 ))}
                             </div>
@@ -150,7 +187,7 @@ const EmailVerificationPage: React.FC = () => {
                             >
                                 <Button
                                     type="submit"
-                                    className="w-[70%]  "
+                                    className="w-[70%]"
                                     disabled={
                                         isLoading ||
                                         code.some((digit) => !digit)
@@ -170,10 +207,16 @@ const EmailVerificationPage: React.FC = () => {
                     </CardContent>
                     <CardFooter>
                         <div className="text-center w-full">
-                            <p className="text-sm ">
+                            <p className="text-sm">
                                 Didn't receive the code?{" "}
-                                <button className="hover:underline font-semibold">
-                                    Resend
+                                <button
+                                    onClick={handleResendOTP}
+                                    disabled={resendDisabled}
+                                    className="hover:underline font-semibold"
+                                >
+                                    {resendDisabled
+                                        ? `Resend in ${cooldown}s`
+                                        : "Resend"}
                                 </button>
                             </p>
                         </div>
