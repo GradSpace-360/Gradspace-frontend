@@ -92,6 +92,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
                 isAuthenticated: true,
                 isCheckingAuth: false,
             })
+            // stimulate a small delay to show the success message
+            await new Promise((resolve) => setTimeout(resolve, 1000))
         } catch (error) {
             const customError = error as CustomError
             set({
