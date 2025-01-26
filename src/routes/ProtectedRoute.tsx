@@ -1,18 +1,14 @@
 import React, { ReactNode } from "react"
 import { Navigate } from "react-router-dom"
 
-import PreLoader from "@/components/PreLoader"
 import { useAuthStore } from "@/store/auth"
 interface ProtectedRouteProps {
     children: ReactNode
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-    const { isAuthenticated, user, isCheckingAuth } = useAuthStore()
+    const { isAuthenticated, user } = useAuthStore()
 
-    if (isCheckingAuth) {
-        return <PreLoader />
-    }
     // Determine the redirect path based on user state
     let redirectPath: string | null = null
     if (!isAuthenticated) {
@@ -20,7 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     } else if (!user?.is_verified) {
         redirectPath = "/verify-email"
     } else {
-        switch (user.registration_status) {
+        switch (user?.registration_status) {
             case "pending":
                 redirectPath = "/register-pending"
                 break
@@ -31,7 +27,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
                 redirectPath = "/register-rejected"
                 break
             default:
-                if (!user.is_onboard) {
+                if (!user?.is_onboard) {
                     redirectPath = "/onboard"
                 }
                 break
