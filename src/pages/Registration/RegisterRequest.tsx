@@ -22,9 +22,9 @@ import RegistrationRejected from "./RegistrationRejected"
 
 // Define types directly in the component file
 interface RegisterRequestFormData {
-    fullname: string
+    full_name: string
     department: string
-    batch: string
+    batch: number // Updated to number type
     email: string
     phone_number: string
     role: "Alumni" | "Student" | "Faculty"
@@ -70,7 +70,12 @@ export default function RegisterRequest() {
     // Handle form submission
     const onSubmit = async (data: RegisterRequestFormData) => {
         try {
-            await submitRegistrationRequest(data)
+            // Convert batch to a number before submitting
+            const payload = {
+                ...data,
+                batch: Number(data.batch), // Ensure batch is a number
+            }
+            await submitRegistrationRequest(payload)
             setRegistrationStatus("pending") // Update status to "pending" after successful submission
         } catch (error) {
             console.error("Error submitting registration request:", error)
@@ -151,15 +156,15 @@ export default function RegisterRequest() {
                                                 <Input
                                                     id="fullname"
                                                     placeholder="e.g. John Doe"
-                                                    {...register("fullname", {
+                                                    {...register("full_name", {
                                                         required:
                                                             "Full name is required",
                                                     })}
                                                 />
-                                                {errors.fullname && (
+                                                {errors.full_name && (
                                                     <p className="text-sm text-red-500">
                                                         {
-                                                            errors.fullname
+                                                            errors.full_name
                                                                 .message
                                                         }
                                                     </p>
@@ -186,21 +191,35 @@ export default function RegisterRequest() {
                                                         <SelectValue placeholder="Select your department" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="CSE">
-                                                            Computer Science and
+                                                        <SelectItem
+                                                            value="Computer Science 
+                                                            Engineering"
+                                                        >
+                                                            Computer Science
                                                             Engineering (CSE)
                                                         </SelectItem>
-                                                        <SelectItem value="EEE">
+                                                        <SelectItem
+                                                            value="Electrical and
+                                                            Electronics
+                                                            Engineering"
+                                                        >
                                                             Electrical and
                                                             Electronics
                                                             Engineering (EEE)
                                                         </SelectItem>
-                                                        <SelectItem value="ECE">
+                                                        <SelectItem
+                                                            value="Electronics and
+                                                            Communication
+                                                            Engineering"
+                                                        >
                                                             Electronics and
                                                             Communication
                                                             Engineering (ECE)
                                                         </SelectItem>
-                                                        <SelectItem value="ME">
+                                                        <SelectItem
+                                                            value="Mechanical
+                                                            Engineering"
+                                                        >
                                                             Mechanical
                                                             Engineering (ME)
                                                         </SelectItem>
@@ -227,9 +246,14 @@ export default function RegisterRequest() {
                                                 <Input
                                                     id="batch"
                                                     placeholder="e.g. 2015"
+                                                    type="number" // Ensure input is treated as a number
                                                     {...register("batch", {
                                                         required:
                                                             "Batch is required",
+                                                        valueAsNumber: true, // Parse input value as a number
+                                                        validate: (value) =>
+                                                            !isNaN(value) ||
+                                                            "Batch must be a valid number", // Validate that the input is a number
                                                     })}
                                                 />
                                                 {errors.batch && (
