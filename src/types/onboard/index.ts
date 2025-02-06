@@ -1,15 +1,8 @@
-/**
- * Onboarding Type Definitions
- *
- * Defines the types used in the onboarding process, including Experience, SocialLinks,
- * OnboardingState, and OnboardingStore.
- */
-
 export type Experience = {
     companyName: string;
     position: string;
-    startDate: string;
-    endDate: string | "Present";
+    startDate: Date;
+    endDate: Date | "Present";
     jobType: "Full-time" | "Part-time" | "Internship" | "Freelance";
     locationType: "Remote" | "Onsite" | "Hybrid";
     location: string;
@@ -27,15 +20,15 @@ export type Education = {
     institutionName: string;
     course: string;
     location: string;
-    startDate: string;
-    endDate: string;
+    startDate: Date;
+    endDate: Date;
     grade: string;
 };
 
 export type OnboardingState = {
     step: number;
     formData: {
-        profileImage: ArrayBuffer | null; // Updated to handle binary image data
+        profileImage: ArrayBuffer | null;
         headline: string;
         about: string;
         location: string;
