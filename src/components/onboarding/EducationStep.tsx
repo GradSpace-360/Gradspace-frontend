@@ -1,4 +1,6 @@
+import { format } from "date-fns"
 import { motion } from "framer-motion"
+import { CalendarIcon } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -9,8 +11,15 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar" // Import the Calendar component
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
 import { useOnboardingStore } from "@/store/onboard"
 import { Education } from "@/types/onboard"
 
@@ -26,11 +35,23 @@ export function EducationStep() {
         formState: { errors },
     } = useForm<Education>()
 
+    const [startDate, setStartDate] = useState<Date | undefined>(undefined)
+    const [endDate, setEndDate] = useState<Date | undefined>(undefined)
+
     const onSubmit = (data: Education) => {
-        const updatedEducations = [...educations, data]
+        if (!startDate || !endDate) {
+            alert("Please select both start and end dates")
+            return
+        }
+        const updatedEducations = [
+            ...educations,
+            { ...data, startDate, endDate },
+        ]
         setEducations(updatedEducations)
         setFormData({ education: updatedEducations })
         reset()
+        setStartDate(undefined)
+        setEndDate(undefined)
     }
 
     const removeEducation = (index: number) => {
@@ -113,6 +134,7 @@ export function EducationStep() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Start Date Picker */}
                             <div className="space-y-2">
                                 <label
                                     htmlFor="startDate"
@@ -120,15 +142,39 @@ export function EducationStep() {
                                 >
                                     Start Date
                                 </label>
-                                <Input
-                                    id="startDate"
-                                    type="date"
-                                    {...register("startDate", {
-                                        required: "Start date is required",
-                                    })}
-                                />
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal",
+                                                !startDate &&
+                                                    "text-muted-foreground"
+                                            )}
+                                        >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {startDate ? (
+                                                format(startDate, "PPP")
+                                            ) : (
+                                                <span>Pick a start date</span>
+                                            )}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-auto p-0"
+                                        align="center"
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={startDate}
+                                            onSelect={setStartDate}
+                                            autoFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
                             </div>
 
+                            {/* End Date Picker */}
                             <div className="space-y-2">
                                 <label
                                     htmlFor="endDate"
@@ -136,13 +182,36 @@ export function EducationStep() {
                                 >
                                     End Date
                                 </label>
-                                <Input
-                                    id="endDate"
-                                    type="date"
-                                    {...register("endDate", {
-                                        required: "End date is required",
-                                    })}
-                                />
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal",
+                                                !endDate &&
+                                                    "text-muted-foreground"
+                                            )}
+                                        >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {endDate ? (
+                                                format(endDate, "PPP")
+                                            ) : (
+                                                <span>Pick an end date</span>
+                                            )}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-auto p-0"
+                                        align="center"
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={endDate}
+                                            onSelect={setEndDate}
+                                            autoFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
                             </div>
                         </div>
 
@@ -205,13 +274,9 @@ export function EducationStep() {
                                     </AccordionTrigger>
                                     <AccordionContent>
                                         <p className="text-sm text-muted-foreground">
-                                            {new Date(
-                                                edu.startDate
-                                            ).toLocaleDateString()}{" "}
+                                            {edu.startDate?.toLocaleDateString()}{" "}
                                             -{" "}
-                                            {new Date(
-                                                edu.endDate
-                                            ).toLocaleDateString()}
+                                            {edu.endDate?.toLocaleDateString()}
                                         </p>
                                         <p>{edu.location}</p>
                                         <p>Grade: {edu.grade}</p>
