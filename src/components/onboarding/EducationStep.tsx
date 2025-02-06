@@ -205,7 +205,13 @@ export function EducationStep() {
                                     </AccordionTrigger>
                                     <AccordionContent>
                                         <p className="text-sm text-muted-foreground">
-                                            {edu.startDate} - {edu.endDate}
+                                            {new Date(
+                                                edu.startDate
+                                            ).toLocaleDateString()}{" "}
+                                            -{" "}
+                                            {new Date(
+                                                edu.endDate
+                                            ).toLocaleDateString()}
                                         </p>
                                         <p>{edu.location}</p>
                                         <p>Grade: {edu.grade}</p>
