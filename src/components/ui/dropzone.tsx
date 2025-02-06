@@ -136,7 +136,7 @@ const getRootError = (
     maxFiles?: number;
   },
 ) => {
-  const errors = errorCodes.map((error) => {
+  const errors = errorCodes.map((error: DropZoneErrorCode) => {
     switch (error) {
       case "file-invalid-type":
         const acceptedTypes = Object.values(limits.accept ?? {})
@@ -337,7 +337,7 @@ const useDropzone = <TUploadRes, TUploadError = string>(
     accept: validation?.accept,
     minSize: validation?.minSize,
     maxSize: validation?.maxSize,
-    onDropAccepted: async (newFiles) => {
+    onDropAccepted: async (newFiles: File[]) => {
       setRootError(undefined);
 
       // useDropzone hook only checks max file count per group of uploaded files, allows going over if in multiple batches
@@ -357,7 +357,7 @@ const useDropzone = <TUploadRes, TUploadError = string>(
       const slicedNewFiles =
         shiftOnMaxFiles === true ? newFiles : newFiles.slice(0, maxNewFiles);
 
-      const onDropFilePromises = slicedNewFiles.map(async (file, index) => {
+      const onDropFilePromises = slicedNewFiles.map(async (file: File, index: number) => {
         if (fileCount + 1 > maxNewFiles) {
           await onRemoveFile(fileStatuses[index].id);
         }
@@ -372,7 +372,7 @@ const useDropzone = <TUploadRes, TUploadError = string>(
         pOnAllUploaded();
       }
     },
-    onDropRejected: (fileRejections) => {
+    onDropRejected: (fileRejections: FileRejection[]) => {
       const errorMessage = getRootError(
         getDropZoneErrorCodes(fileRejections),
         validation ?? {},
