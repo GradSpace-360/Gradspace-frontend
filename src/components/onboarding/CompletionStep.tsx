@@ -1,12 +1,3 @@
-/**
- * CompletionStep Component
- *
- * This component handles the final step of the onboarding process.
- * It allows users to review their profile information and submit the onboarding form.
- * Manages form submission with Axios and provides user feedback during the process.
- *
- * future work: display full name, department, batch, and email in the completion step from the auth contexts
- */
 import { motion } from "framer-motion"
 import { FileText, Github, Globe, Instagram, Linkedin } from "lucide-react"
 import { useState } from "react"
@@ -15,12 +6,14 @@ import { useNavigate } from "react-router-dom"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { useAuthStore } from "@/store/auth"
 import { useOnboardingStore } from "@/store/onboard"
 
 export function CompletionStep() {
     const { formData, setStep, submitFormData } = useOnboardingStore()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const navigate = useNavigate()
+    const { checkAuth } = useAuthStore()
 
     // Convert binary image data to a URL for display
     const profileImageUrl = formData.profileImage
@@ -31,16 +24,30 @@ export function CompletionStep() {
           )
         : null
 
+    // Helper to convert date fields into Date object, returns undefined if invalid
+
+    // Update handleSubmit to transform education and experience dates before submission
     const handleSubmit = async () => {
         setIsSubmitting(true)
+        console.log("Submitting form data:", formData)
         try {
             await submitFormData()
+            await checkAuth()
             navigate("/dashboard")
         } catch (error) {
             console.error("Submission failed:", error)
         } finally {
             setIsSubmitting(false)
         }
+    }
+
+    // Helper function to display date in local format
+    const formatDate = (date: Date | string | undefined): string => {
+        if (!date) return "Present"
+        const parsedDate = date instanceof Date ? date : new Date(date)
+        return isNaN(parsedDate.getTime())
+            ? "Present"
+            : parsedDate.toLocaleDateString()
     }
 
     return (
@@ -124,7 +131,8 @@ export function CompletionStep() {
                                                 {edu.institutionName}
                                             </p>
                                             <p className="text-sm text-muted-foreground">
-                                                {edu.startDate} - {edu.endDate}
+                                                {formatDate(edu.startDate)} -{" "}
+                                                {formatDate(edu.endDate)}
                                             </p>
                                             <p className="text-sm">
                                                 {edu.location}
@@ -152,7 +160,8 @@ export function CompletionStep() {
                                                 {exp.companyName}
                                             </p>
                                             <p className="text-sm text-muted-foreground">
-                                                {exp.startDate} - {exp.endDate}
+                                                {formatDate(exp.startDate)} -{" "}
+                                                {formatDate(exp.endDate)}
                                             </p>
                                             <p className="text-sm">
                                                 {exp.jobType} | {exp.location} (
