@@ -195,8 +195,7 @@ export function WelcomeStep() {
                                 ref={fileInputRef}
                             />
                             <p className="text-sm text-muted-foreground">
-                                Click to upload profile picture (optional, max
-                                1MB, JPEG/PNG only)
+                                upload profile picture (optional)
                             </p>
                         </div>
 
