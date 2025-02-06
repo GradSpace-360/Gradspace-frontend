@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from "framer-motion"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 
@@ -16,30 +15,22 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { axiosPrivate } from "@/config/axiosInstance"
+import { useAuthStore } from "@/store/auth"
 
 import ManualVerificationPending from "./ManualVerificationPending"
 import RegistrationRejected from "./RegistrationRejected"
 
-// Define types directly in the component file
 interface RegisterRequestFormData {
     full_name: string
     department: string
-    batch: number // Updated to number type
+    batch: number
     email: string
     phone_number: string
     role: "Alumni" | "Student" | "Faculty"
 }
 
-type RegistrationStatus =
-    | "registered"
-    | "not_registered"
-    | "pending"
-    | "rejected"
-
 export default function RegisterRequest() {
-    const [registrationStatus, setRegistrationStatus] =
-        useState<RegistrationStatus>("not_registered")
-
+    const { user } = useAuthStore()
     const {
         register,
         handleSubmit,
@@ -47,7 +38,6 @@ export default function RegisterRequest() {
         setValue,
     } = useForm<RegisterRequestFormData>()
 
-    // Utility function: Submit the registration request
     const submitRegistrationRequest = async (
         data: RegisterRequestFormData
     ): Promise<void> => {
@@ -67,7 +57,6 @@ export default function RegisterRequest() {
         }
     }
 
-    // Handle form submission
     const onSubmit = async (data: RegisterRequestFormData) => {
         try {
             // Convert batch to a number before submitting
@@ -76,21 +65,19 @@ export default function RegisterRequest() {
                 batch: Number(data.batch), // Ensure batch is a number
             }
             await submitRegistrationRequest(payload)
-            setRegistrationStatus("pending") // Update status to "pending" after successful submission
+            if (user) user.registration_status = "pending"
         } catch (error) {
             console.error("Error submitting registration request:", error)
         }
     }
 
-    // Display processing message if the request is pending
-    if (registrationStatus === "pending") {
+    if (user?.registration_status === "pending") {
         return <ManualVerificationPending />
     }
-    if (registrationStatus === "rejected") {
+    if (user?.registration_status === "rejected") {
         return <RegistrationRejected />
     }
 
-    // Render the registration form
     return (
         <div className="min-h-screen flex">
             <DotBackground />
@@ -145,7 +132,6 @@ export default function RegisterRequest() {
                                 >
                                     <Card>
                                         <CardContent className="space-y-4 pt-6">
-                                            {/* Full Name */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="fullname"
@@ -171,7 +157,6 @@ export default function RegisterRequest() {
                                                 )}
                                             </div>
 
-                                            {/* Department */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="department"
@@ -235,7 +220,6 @@ export default function RegisterRequest() {
                                                 )}
                                             </div>
 
-                                            {/* Batch */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="batch"
@@ -263,7 +247,6 @@ export default function RegisterRequest() {
                                                 )}
                                             </div>
 
-                                            {/* Email */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="email"
@@ -291,7 +274,6 @@ export default function RegisterRequest() {
                                                 )}
                                             </div>
 
-                                            {/* Phone Number */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="phone_number"
@@ -325,7 +307,6 @@ export default function RegisterRequest() {
                                                 )}
                                             </div>
 
-                                            {/* Role */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="role"
@@ -368,7 +349,6 @@ export default function RegisterRequest() {
                                         </CardContent>
                                     </Card>
 
-                                    {/* Submit Button */}
                                     <div className="flex justify-center">
                                         <Button
                                             type="submit"
