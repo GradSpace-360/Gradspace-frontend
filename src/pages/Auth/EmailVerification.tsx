@@ -195,6 +195,7 @@ const EmailVerificationPage: React.FC = () => {
                                 >
                                     {isLoading ? (
                                         <PulseLoader
+                                            loading={true}
                                             color="#ffffff"
                                             size={10}
                                         />

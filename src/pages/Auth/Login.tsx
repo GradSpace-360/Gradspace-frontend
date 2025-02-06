@@ -145,12 +145,15 @@ const Login: React.FC = () => {
                                     className="w-[70%] "
                                     disabled={isLoading}
                                 >
-                                    Log In
-                                    <PulseLoader
-                                        loading={isLoading}
-                                        color="#ffffff"
-                                        size={10}
-                                    />
+                                    {isLoading ? (
+                                        <PulseLoader
+                                            loading={true}
+                                            color="#ffffff"
+                                            size={10}
+                                        />
+                                    ) : (
+                                        "Login"
+                                    )}
                                 </Button>
                             </motion.div>
                         </form>
