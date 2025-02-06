@@ -11,7 +11,9 @@ let BASE_URL = ""
 if (window.location.hostname === "localhost") {
     BASE_URL = "http://127.0.0.1:8003/api/v1"
 } else {
-    BASE_URL = "https://gradspace.azurewebsites.net/api/v1"
+    // BASE_URL = "https://gradspace.azurewebsites.net/api/v1"
+    // for checking deployed frontend
+    BASE_URL = "http://127.0.0.1:8003/api/v1"
 }
 
 // Create a private Axios instance for authenticated requests
