@@ -176,35 +176,21 @@ export default function RegisterRequest() {
                                                         <SelectValue placeholder="Select your department" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem
-                                                            value="Computer Science 
-                                                            Engineering"
-                                                        >
+                                                        <SelectItem value="Computer Science Engineering">
                                                             Computer Science
                                                             Engineering (CSE)
                                                         </SelectItem>
-                                                        <SelectItem
-                                                            value="Electrical and
-                                                            Electronics
-                                                            Engineering"
-                                                        >
+                                                        <SelectItem value="Electrical and Electronics Engineering">
                                                             Electrical and
                                                             Electronics
                                                             Engineering (EEE)
                                                         </SelectItem>
-                                                        <SelectItem
-                                                            value="Electronics and
-                                                            Communication
-                                                            Engineering"
-                                                        >
+                                                        <SelectItem value="Electronics and Communication Engineering">
                                                             Electronics and
                                                             Communication
                                                             Engineering (ECE)
                                                         </SelectItem>
-                                                        <SelectItem
-                                                            value="Mechanical
-                                                            Engineering"
-                                                        >
+                                                        <SelectItem value="Mechanical Engineering">
                                                             Mechanical
                                                             Engineering (ME)
                                                         </SelectItem>
