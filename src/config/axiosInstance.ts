@@ -15,7 +15,7 @@ if (window.location.hostname === "localhost") {
     // at the same time, the backend should be running on the local machine
     // ngrok URL is used to expose the local server to the internet
     // is a temporary solution, for the production build, the backend should be deployed to the cloud
-    BASE_URL = "https://2835-103-178-205-124.ngrok-free.app/api/v1" // Use the ngrok URL
+    BASE_URL = "https://fd90-103-178-205-124.ngrok-free.app/api/v1" // Use the ngrok URL
 }
 
 // Create a private Axios instance for authenticated requests
