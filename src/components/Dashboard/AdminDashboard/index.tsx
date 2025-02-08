@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react"
 
-import { PlaceholderPage } from "../../../pages/PlaceholderPage"
 import AnalyticsDashboardPage from "./Analytics"
+import EventModerationPage from "./EventModeration"
+import JobManagementPage from "./JobManagement"
+import PostModerationPage from "./PostModeration"
 import { RequestManagementPage } from "./RequestManagement"
 import { AdminSidebar } from "./SideBar"
 import { UserManagementPage } from "./UserManagement"
-
 const AdminDashboard: React.FC = () => {
     const [selectedFeature, setSelectedFeature] = useState<string | null>(null)
 
@@ -33,11 +34,11 @@ const AdminDashboard: React.FC = () => {
             case "analytics":
                 return <AnalyticsDashboardPage />
             case "jobs":
-                return <PlaceholderPage title="Job Management" />
+                return <JobManagementPage />
             case "events":
-                return <PlaceholderPage title="Event Moderation" />
+                return <EventModerationPage />
             case "post":
-                return <PlaceholderPage title="Post Moderation" />
+                return <PostModerationPage />
             default:
                 return (
                     <>
