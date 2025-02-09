@@ -266,9 +266,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
                             animate={{ x: 0 }}
                             exit={{ x: -300 }}
                             transition={{
-                                type: "spring",
-                                stiffness: 100,
-                                damping: 20,
+                                type: "tween",
+                                duration: 0.2,
                             }}
                             className="fixed inset-y-0 left-0 z-50 md:hidden"
                         >
