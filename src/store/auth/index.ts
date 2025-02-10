@@ -129,6 +129,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
     login: async (email, password) => {
         console.log("login", email, password)
+        set({ isLoading: true, error: null })
         try {
             const res = await axiosPrivate.post(`/auth/login`, {
                 email,

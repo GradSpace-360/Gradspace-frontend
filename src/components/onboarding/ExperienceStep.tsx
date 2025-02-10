@@ -1,12 +1,6 @@
-/**
- * ExperienceStep Component
- *
- * This component manages the work experience step in the onboarding process.
- * Users can add, review, and remove their professional experiences.
- * Utilizes React Hook Form for form management and Framer Motion for animations.
- */
-
+import { format } from "date-fns"
 import { motion } from "framer-motion"
+import { CalendarIcon } from "lucide-react"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 
@@ -17,9 +11,15 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
 import {
     Select,
     SelectContent,
@@ -27,34 +27,50 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { cn } from "@/lib/utils"
 import { useOnboardingStore } from "@/store/onboard"
 import { Experience } from "@/types/onboard"
 
 export function ExperienceStep() {
     const { formData, setFormData, setStep } = useOnboardingStore()
     const [experiences, setExperiences] = useState<Experience[]>(
-        formData.experience
+        formData.experience || []
     )
     const {
         control,
         register,
         handleSubmit,
         reset,
-        setValue,
         formState: { errors },
     } = useForm<Experience>()
     const [isPresent, setIsPresent] = useState(false)
+    const [startDate, setStartDate] = useState<Date | undefined>(undefined)
+    const [endDate, setEndDate] = useState<Date | undefined>(undefined)
 
     const onSubmit = (data: Experience) => {
-        const newExperience = {
-            ...data,
-            endDate: isPresent ? "Present" : data.endDate,
+        if (!startDate) {
+            console.error("Start date is required.")
+            return
         }
+        if (!isPresent && !endDate) {
+            console.error("End date is required unless 'Present' is checked.")
+            return
+        }
+
+        const newExperience: Experience = {
+            ...data,
+            startDate: startDate,
+            endDate: isPresent ? "Present" : endDate!,
+        }
+        console.log("new experience : ", newExperience)
         const updatedExperiences = [...experiences, newExperience]
         setExperiences(updatedExperiences)
         setFormData({ experience: updatedExperiences })
         reset()
         setIsPresent(false)
+        setStartDate(undefined)
+        setEndDate(undefined)
+        console.log("form stored experiences : ", formData.experience)
     }
 
     const removeExperience = (index: number) => {
@@ -136,6 +152,7 @@ export function ExperienceStep() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Start Date Picker with Calendar */}
                             <div className="space-y-2">
                                 <label
                                     htmlFor="startDate"
@@ -143,15 +160,41 @@ export function ExperienceStep() {
                                 >
                                     Start Date
                                 </label>
-                                <Input
-                                    id="startDate"
-                                    type="date"
-                                    {...register("startDate", {
-                                        required: "Start date is required",
-                                    })}
-                                />
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal",
+                                                !startDate &&
+                                                    "text-muted-foreground"
+                                            )}
+                                        >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {startDate ? (
+                                                format(startDate, "PPP")
+                                            ) : (
+                                                <span>Pick a start date</span>
+                                            )}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-auto p-0"
+                                        align="center"
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={startDate}
+                                            onSelect={(date) =>
+                                                setStartDate(date)
+                                            }
+                                            autoFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
                             </div>
 
+                            {/* End Date Picker with Calendar and Present Checkbox */}
                             <div className="space-y-2">
                                 <label
                                     htmlFor="endDate"
@@ -159,30 +202,53 @@ export function ExperienceStep() {
                                 >
                                     End Date
                                 </label>
-                                <Input
-                                    id="endDate"
-                                    type="date"
-                                    disabled={isPresent}
-                                    {...register("endDate", {
-                                        required: !isPresent,
-                                    })}
-                                />
-                                <div className="flex items-center space-x-2">
+
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal",
+                                                !endDate &&
+                                                    !isPresent &&
+                                                    "text-muted-foreground"
+                                            )}
+                                            disabled={isPresent}
+                                        >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {endDate ? (
+                                                format(endDate, "PPP")
+                                            ) : (
+                                                <span>Pick an end date</span>
+                                            )}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-auto p-0"
+                                        align="center"
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={endDate}
+                                            onSelect={(date) =>
+                                                setEndDate(date)
+                                            }
+                                            autoFocus
+                                            disabled={isPresent}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <div className="flex items-center  space-x-2">
                                     <Checkbox
                                         id="present"
                                         checked={isPresent}
-                                        onCheckedChange={(checked) => {
-                                            setIsPresent(checked as boolean)
-                                            if (checked) {
-                                                setValue("endDate", "Present")
-                                            } else {
-                                                setValue("endDate", "")
-                                            }
-                                        }}
+                                        onCheckedChange={(checked) =>
+                                            setIsPresent(checked === true)
+                                        }
                                     />
                                     <label
                                         htmlFor="present"
-                                        className="text-sm"
+                                        className="text-sm font-medium"
                                     >
                                         Present
                                     </label>
@@ -306,7 +372,13 @@ export function ExperienceStep() {
                                     </AccordionTrigger>
                                     <AccordionContent>
                                         <p className="text-sm text-muted-foreground">
-                                            {exp.startDate} - {exp.endDate}
+                                            {exp.startDate instanceof Date
+                                                ? format(exp.startDate, "PPP")
+                                                : exp.startDate}{" "}
+                                            -{" "}
+                                            {exp.endDate instanceof Date
+                                                ? format(exp.endDate, "PPP")
+                                                : exp.endDate}
                                         </p>
                                         <p>
                                             {exp.jobType} | {exp.location} (

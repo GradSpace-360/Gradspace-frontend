@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from "framer-motion"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 
@@ -16,30 +15,22 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { axiosPrivate } from "@/config/axiosInstance"
+import { useAuthStore } from "@/store/auth"
 
 import ManualVerificationPending from "./ManualVerificationPending"
 import RegistrationRejected from "./RegistrationRejected"
 
-// Define types directly in the component file
 interface RegisterRequestFormData {
-    fullname: string
+    full_name: string
     department: string
-    batch: string
+    batch: number
     email: string
     phone_number: string
     role: "Alumni" | "Student" | "Faculty"
 }
 
-type RegistrationStatus =
-    | "registered"
-    | "not_registered"
-    | "pending"
-    | "rejected"
-
 export default function RegisterRequest() {
-    const [registrationStatus, setRegistrationStatus] =
-        useState<RegistrationStatus>("not_registered")
-
+    const { user } = useAuthStore()
     const {
         register,
         handleSubmit,
@@ -47,7 +38,6 @@ export default function RegisterRequest() {
         setValue,
     } = useForm<RegisterRequestFormData>()
 
-    // Utility function: Submit the registration request
     const submitRegistrationRequest = async (
         data: RegisterRequestFormData
     ): Promise<void> => {
@@ -67,25 +57,27 @@ export default function RegisterRequest() {
         }
     }
 
-    // Handle form submission
     const onSubmit = async (data: RegisterRequestFormData) => {
         try {
-            await submitRegistrationRequest(data)
-            setRegistrationStatus("pending") // Update status to "pending" after successful submission
+            // Convert batch to a number before submitting
+            const payload = {
+                ...data,
+                batch: Number(data.batch), // Ensure batch is a number
+            }
+            await submitRegistrationRequest(payload)
+            if (user) user.registration_status = "pending"
         } catch (error) {
             console.error("Error submitting registration request:", error)
         }
     }
 
-    // Display processing message if the request is pending
-    if (registrationStatus === "pending") {
+    if (user?.registration_status === "pending") {
         return <ManualVerificationPending />
     }
-    if (registrationStatus === "rejected") {
+    if (user?.registration_status === "rejected") {
         return <RegistrationRejected />
     }
 
-    // Render the registration form
     return (
         <div className="min-h-screen flex">
             <DotBackground />
@@ -140,7 +132,6 @@ export default function RegisterRequest() {
                                 >
                                     <Card>
                                         <CardContent className="space-y-4 pt-6">
-                                            {/* Full Name */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="fullname"
@@ -151,22 +142,21 @@ export default function RegisterRequest() {
                                                 <Input
                                                     id="fullname"
                                                     placeholder="e.g. John Doe"
-                                                    {...register("fullname", {
+                                                    {...register("full_name", {
                                                         required:
                                                             "Full name is required",
                                                     })}
                                                 />
-                                                {errors.fullname && (
+                                                {errors.full_name && (
                                                     <p className="text-sm text-red-500">
                                                         {
-                                                            errors.fullname
+                                                            errors.full_name
                                                                 .message
                                                         }
                                                     </p>
                                                 )}
                                             </div>
 
-                                            {/* Department */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="department"
@@ -186,21 +176,21 @@ export default function RegisterRequest() {
                                                         <SelectValue placeholder="Select your department" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="CSE">
-                                                            Computer Science and
+                                                        <SelectItem value="Computer Science Engineering">
+                                                            Computer Science
                                                             Engineering (CSE)
                                                         </SelectItem>
-                                                        <SelectItem value="EEE">
+                                                        <SelectItem value="Electrical and Electronics Engineering">
                                                             Electrical and
                                                             Electronics
                                                             Engineering (EEE)
                                                         </SelectItem>
-                                                        <SelectItem value="ECE">
+                                                        <SelectItem value="Electronics and Communication Engineering">
                                                             Electronics and
                                                             Communication
                                                             Engineering (ECE)
                                                         </SelectItem>
-                                                        <SelectItem value="ME">
+                                                        <SelectItem value="Mechanical Engineering">
                                                             Mechanical
                                                             Engineering (ME)
                                                         </SelectItem>
@@ -216,7 +206,6 @@ export default function RegisterRequest() {
                                                 )}
                                             </div>
 
-                                            {/* Batch */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="batch"
@@ -227,9 +216,14 @@ export default function RegisterRequest() {
                                                 <Input
                                                     id="batch"
                                                     placeholder="e.g. 2015"
+                                                    type="number" // Ensure input is treated as a number
                                                     {...register("batch", {
                                                         required:
                                                             "Batch is required",
+                                                        valueAsNumber: true, // Parse input value as a number
+                                                        validate: (value) =>
+                                                            !isNaN(value) ||
+                                                            "Batch must be a valid number", // Validate that the input is a number
                                                     })}
                                                 />
                                                 {errors.batch && (
@@ -239,7 +233,6 @@ export default function RegisterRequest() {
                                                 )}
                                             </div>
 
-                                            {/* Email */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="email"
@@ -267,7 +260,6 @@ export default function RegisterRequest() {
                                                 )}
                                             </div>
 
-                                            {/* Phone Number */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="phone_number"
@@ -301,7 +293,6 @@ export default function RegisterRequest() {
                                                 )}
                                             </div>
 
-                                            {/* Role */}
                                             <div className="space-y-2">
                                                 <label
                                                     htmlFor="role"
@@ -344,7 +335,6 @@ export default function RegisterRequest() {
                                         </CardContent>
                                     </Card>
 
-                                    {/* Submit Button */}
                                     <div className="flex justify-center">
                                         <Button
                                             type="submit"

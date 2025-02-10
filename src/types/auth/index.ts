@@ -12,6 +12,9 @@ export interface User {
     created_at: Date
     updated_at: Date
     role: "Admin" | "Student" | "Faculty" | "Alumni"
+    full_name: string
+    department: string
+    batch: string
     // [key: string]: any // For any additional or dynamic user fields
 }
 

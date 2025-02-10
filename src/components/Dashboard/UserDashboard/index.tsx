@@ -2,7 +2,6 @@ import { motion } from "framer-motion"
 
 import { useAuthStore } from "@/store/auth"
 import { User } from "@/types/auth"
-import { formatDate } from "@/utils/date"
 
 const UserDashboard = () => {
     const { user, logout } = useAuthStore() as {
@@ -31,21 +30,12 @@ const UserDashboard = () => {
                     </h3>
                     <p className="">Name: {user.username}</p>
                     <p className="">Email: {user.email}</p>
-                    <h3 className="text-xl font-semibold mb-3">
-                        Account Activity
-                    </h3>
-                    <p className="">
-                        <span className="font-bold">Joined: </span>
-                        {new Date(user.created_at).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                        })}
-                    </p>
-                    <p className="">
-                        <span className="font-bold">Last Login: </span>
-
-                        {formatDate(new Date(user.updated_at).toISOString())}
+                    <p className="">Role: {user.role}</p>
+                    <p className="">Department: {user.department}</p>
+                    <p className="">Batch: {user.batch}</p>
+                    <p>
+                        FullName:{" "}
+                        {user.full_name ? user.full_name : "Not Provided"}
                     </p>
                 </motion.div>
             </div>

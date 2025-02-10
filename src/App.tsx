@@ -20,7 +20,7 @@ const DevInfo = lazy(() => import("./pages/DevInfo"))
 const HomePage = lazy(() => import("./pages/Home"))
 const PageNotFound = lazy(() => import("./pages/PageNotFound"))
 const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"))
-const RedirectRoute = lazy(() => import("./routes/RedirectRoute"))
+// const RedirectRoute = lazy(() => import("./routes/RedirectRoute"))
 const OnboardingPage = lazy(() => import("./pages/Onboard"))
 const ManualVerificationPending = lazy(
     () => import("./pages/Registration/ManualVerificationPending")
@@ -50,9 +50,9 @@ const App = () => {
                 <Route
                     path="/"
                     element={
-                        <RedirectRoute>
+                        // <RedirectRoute>
                             <HomePage />
-                        </RedirectRoute>
+                        // </RedirectRoute>
                     }
                 />
 
@@ -86,17 +86,17 @@ const App = () => {
                 <Route
                     path="/login"
                     element={
-                        <RedirectRoute>
+                        // <RedirectRoute>
                             <LoginPage />
-                        </RedirectRoute>
+                        // </RedirectRoute>
                     }
                 />
                 <Route
                     path="/signup"
                     element={
-                        <RedirectRoute>
+                        // <RedirectRoute>
                             <SignupPage />
-                        </RedirectRoute>
+                        // </RedirectRoute>
                     }
                 />
                 <Route
@@ -121,6 +121,7 @@ const App = () => {
                                 <Navigate to="/login" replace />
                             )}
                         </ProtectedRoute>
+                        // <DashboardPage userRole="Admin" />
                     }
                 />
                 <Route

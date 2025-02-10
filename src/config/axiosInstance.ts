@@ -11,7 +11,11 @@ let BASE_URL = ""
 if (window.location.hostname === "localhost") {
     BASE_URL = "http://127.0.0.1:8003/api/v1"
 } else {
-    BASE_URL = "https://gradspace.azurewebsites.net/api/v1"
+    // for production build we have to use the ngrok URL to make the API calls to the backend
+    // at the same time, the backend should be running on the local machine
+    // ngrok URL is used to expose the local server to the internet
+    // is a temporary solution, for the production build, the backend should be deployed to the cloud
+    BASE_URL = "https://d7eb-103-178-205-124.ngrok-free.app/api/v1" // Use the ngrok URL
 }
 
 // Create a private Axios instance for authenticated requests

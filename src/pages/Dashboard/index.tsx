@@ -1,6 +1,6 @@
-import { UserRole } from "../../types/user"
-import AdminDasboard from "./AdminDashboard"
-import UserDasboard from "./UserDasboard"
+import AdminDasboard from "@/components/Dashboard/AdminDashboard"
+import UserDasboard from "@/components/Dashboard/UserDashboard"
+import { UserRole } from "@/types/user"
 
 type DashboardProps = {
     userRole: UserRole
