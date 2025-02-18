@@ -1,11 +1,20 @@
 import { useEffect } from "react"
 // Lazy load pages and components to reduce the initial bundle size
 import { lazy, Suspense } from "react"
-import { Navigate, Route, Routes } from "react-router-dom"
+import {  Navigate, Route, Routes, useParams } from "react-router-dom"
 
+import  Notifications  from "@/components/Dashboard/UserDashboard/Notifications"
 import { useAuthStore } from "@/store/auth"
 
-import PreLoader from "./components/PreLoader" // PreLoader imported normally, not lazy-loaded
+import ChatPreview from "./components/Dashboard/UserDashboard/Chat"
+import EventsPreview from "./components/Dashboard/UserDashboard/Events"
+import Explore from "./components/Dashboard/UserDashboard/Explore"
+import HomePreview from "./components/Dashboard/UserDashboard/Home"
+import JobPortalPreview from "./components/Dashboard/UserDashboard/Jobs"
+import ProfilePreview from "./components/Dashboard/UserDashboard/Profile"
+import ProjectShelfPreview from "./components/Dashboard/UserDashboard/ProjectShelf"
+import SettingsPreview from "./components/Dashboard/UserDashboard/Settings"
+import PreLoader from "./components/PreLoader" 
 
 // Lazy-loaded components/pages
 const EmailVerificationPage = lazy(
@@ -31,6 +40,11 @@ const ManualVerificationRejected = lazy(
 const RegisterRequestPage = lazy(
     () => import("./pages/Registration/RegisterRequest")
 )
+
+const ProfilePreviewWrapper = () => {  
+    const { userName } = useParams(); // Access the userName from the URL
+    return <ProfilePreview userName={userName || ""} />; 
+};
 
 const App = () => {
     const { isCheckingAuth, checkAuth, user } = useAuthStore()
@@ -112,18 +126,28 @@ const App = () => {
                     element={<ForgotPasswordPage />}
                 />
                 <Route
-                    path="/dashboard"
-                    element={
-                        <ProtectedRoute>
-                            {user ? (
-                                <DashboardPage userRole={user.role} />
-                            ) : (
-                                <Navigate to="/login" replace />
-                            )}
-                        </ProtectedRoute>
-                        // <DashboardPage userRole="Admin" />
-                    }
-                />
+                        path="/dashboard"
+                        element={
+                            <ProtectedRoute>
+                                {user ? (
+                                    <DashboardPage userRole={user.role} />
+                                ) : (
+                                    <Navigate to="/login" replace />
+                                )}
+                            </ProtectedRoute>
+                        }
+                    >
+                    <Route index element={<HomePreview />} />
+                    <Route path="job-portal" element={<JobPortalPreview />} />
+                    <Route path="explore" element={<Explore />} />
+                    <Route path="events" element={<EventsPreview />} />
+                    <Route path="chat" element={<ChatPreview />} />
+                    <Route path="projects" element={<ProjectShelfPreview />} />
+                    <Route path="profile/:userName" element={<ProfilePreviewWrapper />} />
+                    <Route path="settings" element={<SettingsPreview />} />
+                    <Route path="notifications" element={<Notifications />} />
+                </Route>
+
                 <Route
                     path="/reset-password/:token"
                     element={<ResetPasswordPage />}
