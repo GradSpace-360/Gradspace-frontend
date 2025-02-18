@@ -1,63 +1,159 @@
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
+import { Bell, Briefcase, Calendar, Home, MessageCircle } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Link, Outlet, useLocation } from "react-router-dom"
 
+import { Button } from "@/components/ui/button"
+import { axiosPrivate } from "@/config/axiosInstance"
 import { useAuthStore } from "@/store/auth"
-import { User } from "@/types/auth"
 
-const UserDashboard = () => {
-    const { user, logout } = useAuthStore() as {
-        user: User
-        logout: () => void
-    }
+import Sidebar from "./Sidebar"
 
-    const handleLogout = () => {
-        logout()
-    }
+export default function Index() {
+    const location = useLocation()
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+    const [isHeaderVisible, setIsHeaderVisible] = useState(true)
+    const [isNavbarVisible, setIsNavbarVisible] = useState(true)
+    const [lastScrollY, setLastScrollY] = useState(0)
+    const { user } = useAuthStore()
+    const profileImageUrl = user?.profile_image
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY
+            if (currentScrollY > lastScrollY && currentScrollY > 50) {
+                setIsHeaderVisible(false)
+                setIsNavbarVisible(false)
+            } else {
+                setIsHeaderVisible(true)
+                setIsNavbarVisible(true)
+            }
+            setLastScrollY(currentScrollY)
+        }
+
+        window.addEventListener("scroll", handleScroll)
+        return () => window.removeEventListener("scroll", handleScroll)
+    }, [lastScrollY])
+
+    const navItems = [
+        { path: "/dashboard", icon: Home, label: "Home" },
+        { path: "/dashboard/job-portal", icon: Briefcase, label: "Jobs" },
+        { path: "/dashboard/events", icon: Calendar, label: "Events" },
+        {
+            path: "/dashboard/notifications",
+            icon: Bell,
+            label: "Notifications",
+        },
+        { path: "/dashboard/chat", icon: MessageCircle, label: "Chat" },
+    ]
+
     return (
-        <motion.div className=" min-h-screen w-full mx-auto  p-8 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl border border-gray-800">
-            <h2 className="text-3xl font-bold mb-6 text-violet-500 text-center">
-                Dashboard
-            </h2>
+        <div className="flex min-h-screen bg-background text-foreground lg:pl-0">
+            <Sidebar
+                isMobileMenuOpen={isMobileMenuOpen}
+                setIsMobileMenuOpen={setIsMobileMenuOpen}
+            />
 
-            <div className="space-y-6 flex flex-col items-center  p-4">
-                <motion.div
-                    className="p-4 max-w-md w-full   rounded-lg border border-gray-700"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
+            <div className="flex-1 flex flex-col xm:ml-16 sm:ml-24 xl:ml-64">
+                <motion.header
+                    className="bg-background xl:hidden border-border p-4 flex items-center justify-between sticky top-0 z-50"
+                    initial={{ y: 0 }}
+                    animate={{ y: isHeaderVisible ? 0 : -100 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
-                    <h3 className="text-xl font-semibold mb-3">
-                        Profile Information
-                    </h3>
-                    <p className="">Name: {user.username}</p>
-                    <p className="">Email: {user.email}</p>
-                    <p className="">Role: {user.role}</p>
-                    <p className="">Department: {user.department}</p>
-                    <p className="">Batch: {user.batch}</p>
-                    <p>
-                        FullName:{" "}
-                        {user.full_name ? user.full_name : "Not Provided"}
-                    </p>
-                </motion.div>
+                    <div className="flex items-center xm:w-16">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="xm:hidden rounded-full"
+                            onClick={() => setIsMobileMenuOpen(true)}
+                        >
+                            <img
+                                src={`${axiosPrivate.defaults.baseURL}/${profileImageUrl}`}
+                                alt="Profile"
+                                className="rounded-full w-9 h-9 object-cover"
+                            />
+                        </Button>
+                    </div>
+
+                    <div className="flex-1 text-center">
+                        <h1 className="xl:hidden font-bold text-xl font-philosopher whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                            gradSpace
+                        </h1>
+                    </div>
+
+                    <div className="xm:w-16" />
+                </motion.header>
+
+                <main className="flex-1 overflow-auto p-1 sm:p-2 w-full">
+                    <AnimatePresence mode="wait">
+                        <Outlet />
+                    </AnimatePresence>
+                </main>
+
+                <motion.nav
+                    className="xm:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border/40 z-50 shadow-sm"
+                    initial={{ y: 0 }}
+                    animate={{
+                        y: isNavbarVisible ? 0 : 100,
+                        opacity: isNavbarVisible ? 1 : 0.7,
+                    }}
+                    transition={{
+                        duration: 0.3,
+                        ease: [0.25, 0.46, 0.45, 0.94],
+                        opacity: { duration: 0.2 },
+                    }}
+                >
+                    <div className="grid grid-cols-5 gap-1 px-2 py-3">
+                        {navItems.map(({ path, icon: Icon }) => {
+                            const isActive = location.pathname === path
+                            return (
+                                <Link
+                                    key={path}
+                                    to={path}
+                                    className="flex items-center justify-center"
+                                >
+                                    <motion.div
+                                        whileTap={{ scale: 0.95 }}
+                                        className="w-full"
+                                    >
+                                        <Button
+                                            variant="ghost"
+                                            size="default"
+                                            className="h-12 w-full flex flex-col gap-1 rounded-xl transition-colors duration-200 hover:bg-accent/30 active:bg-accent/40"
+                                        >
+                                            <div className="relative">
+                                                <Icon
+                                                    className={`h-6 w-6 transition-colors ${
+                                                        isActive
+                                                            ? "text-primary"
+                                                            : "text-muted-foreground"
+                                                    }`}
+                                                    style={{
+                                                        width: "1.5rem",
+                                                        height: "1.5rem",
+                                                    }}
+                                                />
+                                                {isActive && (
+                                                    <motion.div
+                                                        className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary"
+                                                        initial={{ scale: 0 }}
+                                                        animate={{ scale: 1 }}
+                                                        transition={{
+                                                            type: "spring",
+                                                            stiffness: 500,
+                                                        }}
+                                                    />
+                                                )}
+                                            </div>
+                                        </Button>
+                                    </motion.div>
+                                </Link>
+                            )
+                        })}
+                    </div>
+                </motion.nav>
             </div>
-
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="mt-4 max-w-md w-full mx-auto flex items-center justify-center"
-            >
-                <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleLogout}
-                    className="w-md py-3 px-4 bg-gradient-to-r from-violet-500 to-violet-600 text-white 
-				font-bold rounded-lg shadow-lg hover:from-violet-600 hover:to-violet-700
-				 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-                >
-                    Logout
-                </motion.button>
-            </motion.div>
-        </motion.div>
+        </div>
     )
 }
-export default UserDashboard
