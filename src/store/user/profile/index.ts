@@ -37,19 +37,50 @@ export const useProfileStore = create<ProfileStore>((set) => ({
     updateProfile: async (userName, updatedData) => {
         try {
             const formData = new FormData()
-
             // Exclude the user field from updatedData
             const { user, profile, ...restData } = updatedData
             console.log(user)
             // create a new profile object with the profile image removed
             const { profileImage, ...profileWithoutImage } = profile || {}
-            console.log(profileImage)
+
+            // handling profile image update separately, TODO : later extract this from the updateProfile function,
+            // and create a new function for updating the profile image.
+            const formDataProfile = new FormData()
+            if (profileImage === null) {
+                // Indicate removal of profile image
+                formDataProfile.append("profile_image", "null")
+            } else if (typeof profileImage === "string") {
+                // No change; send current image path
+                formDataProfile.append("profile_image", profileImage)
+            } else {
+                // New binary file provided; ensure profileImage is a Blob with a filename
+                console.log("add profile image (binary)", profileImage)
+                const blob =
+                    profileImage instanceof Blob
+                        ? profileImage
+                        : new Blob(
+                              profileImage !== undefined ? [profileImage] : []
+                          )
+                // Provide a filename (e.g., "upload.png")
+                formDataProfile.append("profile_image", blob, "upload.png")
+            }
+            try {
+                await axiosPrivate.patch(
+                    "/profile/profileImage",
+                    formDataProfile,
+                    {
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
+                )
+            } catch (error) {
+                console.error("Error updating profile image:", error)
+            }
+            // handling profile data update separately (excluded profile image)
             // remove profile image from the profile object
             const dataToSend = {
                 ...restData,
                 profile: profileWithoutImage,
             }
-
             // Append JSON data
             formData.append("data", JSON.stringify(dataToSend))
             try {
@@ -59,9 +90,7 @@ export const useProfileStore = create<ProfileStore>((set) => ({
                 toast.success("Profile updated successfully")
                 // refetch the profile data
                 await fetchUserProfile(userName)
-                // move to the proifle page
                 window.location.href = `/dashboard/profile/${userName}`
-
             } catch (error) {
                 console.log("Error updating user profile:", error)
                 toast.error("Failed to update profile")
