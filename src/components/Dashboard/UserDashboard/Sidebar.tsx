@@ -127,24 +127,34 @@ const SidebarContent = ({
                                     className="w-full justify-start xl:justify-start xm:justify-center xl:px-10 px-2 text-lg hover:bg-accent/50"
                                 >
                                     {link.label === "Profile" ? (
-                                        <img
-                                            src={`${axiosPrivate.defaults.baseURL}/${profileImageUrl}`}
-                                            alt=""
-                                            style={{
-                                                width: "1.5rem",
-                                                height: "1.5rem",
-                                            }}
-                                            className="rounded-full mr-1 h-7 w-7 border-2 border-primary"
-                                        />
+                                        profileImageUrl ? (
+                                            <img
+                                                src={`${axiosPrivate.defaults.baseURL}/${profileImageUrl}`}
+                                                alt=""
+                                                style={{
+                                                    width: "1.5rem",
+                                                    height: "1.5rem",
+                                                }}
+                                                className="rounded-full mr-1 h-7 w-7 border-2 border-primary"
+                                            />
+                                        ) : (
+                                            <div className=" rounded-full overflow-hidden mr-1 h-7 w-7 border-2 border-primary">
+                                                <img
+                                                    src="/user_avatar.png"
+                                                    alt="Default avatar"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                        )
                                     ) : (
                                         <link.icon
                                             style={{
                                                 width: "1.18rem",
                                                 height: "1.18rem",
                                             }}
-                                            className="mr-2 h-7 w-7 "
+                                            className="mr-2 h-7 w-7"
                                         />
-                                    )}{" "}
+                                    )}
                                     <motion.span
                                         className="inline xm:hidden xl:inline"
                                         initial={{ opacity: 0 }}
