@@ -1,7 +1,6 @@
 import toast from "react-hot-toast"
 import { create } from "zustand"
 
-import { fetchUserProfile } from "@/components/Dashboard/UserDashboard/Profile/api"
 import { axiosPrivate } from "@/config/axiosInstance"
 import { ProfileData } from "@/types/user/Profile"
 
@@ -25,9 +24,11 @@ export const useProfileStore = create<ProfileStore>((set) => ({
     fetchProfile: async (userName) => {
         set({ loading: true, error: null })
         try {
-            const data = await fetchUserProfile(userName)
+            const response = await axiosPrivate.get(`/profile/${userName}`)
+            const data: ProfileData = response.data
             set({ profileData: data, loading: false })
-        } catch {
+        } catch (error) {
+            console.log("Error fetching user profile:", error)
             set({ error: "Failed to load profile", loading: false })
         }
     },
@@ -89,7 +90,7 @@ export const useProfileStore = create<ProfileStore>((set) => ({
                 })
                 toast.success("Profile updated successfully")
                 // refetch the profile data
-                await fetchUserProfile(userName)
+                await useProfileStore.getState().fetchProfile(userName)
                 window.location.href = `/dashboard/profile/${userName}`
             } catch (error) {
                 console.log("Error updating user profile:", error)
