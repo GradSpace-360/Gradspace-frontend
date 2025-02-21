@@ -21,14 +21,12 @@ interface ProfileImageSectionProps {
 }
 
 export const ProfileImageSection = ({
-    profileData,
     previewImage,
     setPreviewImage,
     handleProfileChange,
 }: ProfileImageSectionProps) => {
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [showImageDialog, setShowImageDialog] = useState(false)
-    console.log(profileData)
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
