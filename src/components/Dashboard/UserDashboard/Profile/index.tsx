@@ -1,5 +1,13 @@
 import { motion } from "framer-motion"
-import { Github, Link2, Star } from "lucide-react"
+import {
+    AlertTriangle,
+    BriefcaseBusinessIcon,
+    Github,
+    GraduationCapIcon,
+    Info,
+    Link2,
+    Star,
+} from "lucide-react"
 import { useEffect, useState } from "react"
 import { FileText, Instagram, Linkedin } from "react-feather"
 import { useNavigate } from "react-router-dom"
@@ -14,6 +22,7 @@ import { useAuthStore } from "@/store/auth"
 import { useProfileStore } from "@/store/user/profile"
 
 import { TimelineItem } from "./TimeLineItem"
+import { UserPostGrid } from "./UserPostGrid"
 
 interface ProfilePreviewProps {
     userName: string
@@ -24,7 +33,8 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
         "POSTS" | "EDUCATION" | "EXPERIENCE"
     >("POSTS")
     const { user: authUser } = useAuthStore()
-    const { profileData, loading, error, fetchProfile } = useProfileStore()
+    const { profileData, loading, error, fetchProfile, toggleFollow } =
+        useProfileStore()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -32,7 +42,31 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
     }, [userName, fetchProfile])
 
     if (loading) return <div></div>
-    if (error) return <div className="text-red-500 p-8">{error}</div>
+    if (error)
+        return (
+            <div className=" p-8">
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className=" p-6  mb-4"
+                >
+                    <div className="flex flex-col items-center p-4">
+                        <div className="flex items-center gap-2">
+                            <AlertTriangle className="h-8 w-8 text-red-800" />
+                            <h2 className="text-2xl font-semibold font-philosopher text-red-800  mb-2">
+                                User Not Found
+                            </h2>
+                        </div>
+                        <p className="text-red-800 flex items-center gap-2">
+                            <Info className="h-5 w-5" />
+                            We couldn't locate the user you're looking for.
+                            Please check the username and try again.
+                        </p>
+                    </div>
+                </motion.div>
+            </div>
+        )
     if (!profileData) return null
 
     const { user, profile, educations, experiences, socialLinks } = profileData
@@ -207,8 +241,13 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
                                                 <Button
                                                     className="flex-1 sm:flex-none"
                                                     size="sm"
+                                                    onClick={() =>
+                                                        toggleFollow(userName)
+                                                    }
                                                 >
-                                                    Follow
+                                                    {user.isFollowing
+                                                        ? "Unfollow"
+                                                        : "Follow"}
                                                 </Button>
                                                 <Button
                                                     variant="secondary"
@@ -225,25 +264,27 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
                                 {/* Stats */}
                                 <div className="flex flex-wrap gap-4 my-3 sm:my-4">
                                     <div className="flex items-center gap-1">
-                                        <span className="font-semibold">0</span>
+                                        <span className="font-semibold">
+                                            {user.postCount}
+                                        </span>
                                         <span className="text-sm text-muted-foreground">
                                             posts
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-1">
                                         <span className="font-semibold">
-                                            {educations.length}
+                                            {user.followingCount}
                                         </span>
                                         <span className="text-sm text-muted-foreground">
-                                            educations
+                                            following
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-1">
                                         <span className="font-semibold">
-                                            {experiences.length}
+                                            {user.followerCount}
                                         </span>
                                         <span className="text-sm text-muted-foreground">
-                                            experiences
+                                            followers
                                         </span>
                                     </div>
                                 </div>
@@ -445,65 +486,71 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
                         {/* Tab Content */}
                         <div className="mt-4">
                             {activeTab === "POSTS" && (
-                                <div className="grid grid-cols-3 gap-1">
-                                    {Array.from({ length: 9 }).map(
-                                        (
-                                            _,
-                                            index // Dummy posts
-                                        ) => (
-                                            <div
-                                                key={index}
-                                                className="aspect-square bg-zinc-800"
-                                            >
-                                                <img
-                                                    src="/placeholder.svg"
-                                                    alt={`Post ${index + 1}`}
-                                                    width={300}
-                                                    height={300}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            </div>
-                                        )
-                                    )}
-                                </div>
+                                <UserPostGrid username={userName} />
                             )}
 
-                            {activeTab === "EDUCATION" && (
-                                <div className="pl-4">
-                                    {educations.map((edu, index) => (
-                                        <TimelineItem
-                                            key={index}
-                                            title={edu.course}
-                                            subtitle={edu.institutionName}
-                                            location={edu.location}
-                                            start={formatDate(edu.startDate)}
-                                            end={formatDate(edu.endDate)}
-                                            details={`Grade: ${edu.grade}`}
-                                            type="EDUCATION"
-                                        />
-                                    ))}
-                                </div>
-                            )}
-                            {activeTab === "EXPERIENCE" && (
-                                <div className="pl-4">
-                                    {experiences.map((exp, index) => (
-                                        <TimelineItem
-                                            key={index}
-                                            title={exp.position}
-                                            subtitle={exp.companyName}
-                                            location={`${exp.location} · ${exp.jobType}`}
-                                            start={formatDate(exp.startDate)}
-                                            end={
-                                                exp.endDate
-                                                    ? formatDate(exp.endDate)
-                                                    : "Present"
-                                            }
-                                            details={exp.locationType}
-                                            type="EXPERIENCE"
-                                        />
-                                    ))}
-                                </div>
-                            )}
+                            {activeTab === "EDUCATION" &&
+                                (educations.length > 0 ? (
+                                    <div className="pl-4">
+                                        {educations.map((edu, index) => (
+                                            <TimelineItem
+                                                key={index}
+                                                title={edu.course}
+                                                subtitle={edu.institutionName}
+                                                location={edu.location}
+                                                start={formatDate(
+                                                    edu.startDate
+                                                )}
+                                                end={formatDate(edu.endDate)}
+                                                details={`Grade: ${edu.grade}`}
+                                                type="EDUCATION"
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8">
+                                        <div className="rounded-full border-2 dark:border-zinc-700 border-zinc-500 w-20 h-20 flex items-center justify-center mb-4 mx-auto">
+                                            <GraduationCapIcon className="text-zinc-700 dark:text-zinc-500" />
+                                        </div>
+                                        <span className="font-bold text-zinc-700 dark:text-zinc-500">
+                                            No education data added
+                                        </span>
+                                    </div>
+                                ))}
+                            {activeTab === "EXPERIENCE" &&
+                                (experiences.length > 0 ? (
+                                    <div className="pl-4">
+                                        {experiences.map((exp, index) => (
+                                            <TimelineItem
+                                                key={index}
+                                                title={exp.position}
+                                                subtitle={exp.companyName}
+                                                location={`${exp.location} · ${exp.jobType}`}
+                                                start={formatDate(
+                                                    exp.startDate
+                                                )}
+                                                end={
+                                                    exp.endDate
+                                                        ? formatDate(
+                                                              exp.endDate
+                                                          )
+                                                        : "Present"
+                                                }
+                                                details={exp.locationType}
+                                                type="EXPERIENCE"
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8">
+                                        <div className="rounded-full border-2 dark:border-zinc-700 border-zinc-500 w-20 h-20 flex items-center justify-center mb-4 mx-auto">
+                                            <BriefcaseBusinessIcon className="text-zinc-700 dark:text-zinc-500" />
+                                        </div>
+                                        <span className="font-bold text-zinc-700 dark:text-zinc-500">
+                                            No experience data added
+                                        </span>
+                                    </div>
+                                ))}
                         </div>
                     </div>
                 </motion.div>
