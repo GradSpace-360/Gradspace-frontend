@@ -49,4 +49,8 @@ export interface User {
     id: string;
     role: string;
     userName: string;
+    followerCount: number;
+    followingCount: number;
+    postCount: number;
+    isFollowing: boolean;
 }
