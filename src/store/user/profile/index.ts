@@ -14,6 +14,7 @@ interface ProfileStore {
         userName: string,
         updatedData: Partial<ProfileData>
     ) => Promise<void>
+    toggleFollow: (userName: string) => Promise<void>
 }
 
 export const useProfileStore = create<ProfileStore>((set) => ({
@@ -99,6 +100,31 @@ export const useProfileStore = create<ProfileStore>((set) => ({
             }
         } catch (error) {
             set({ error: "Failed to update profile" })
+            throw error
+        }
+    },
+    toggleFollow: async (userName) => {
+        try {
+            await axiosPrivate.post(`/profile/${userName}/follow`)
+            // Update the follow status in the profile data
+            const currentProfile = useProfileStore.getState().profileData
+            if (currentProfile) {
+                useProfileStore.setState({
+                    profileData: {
+                        ...currentProfile,
+                        user: {
+                            ...currentProfile.user,
+                            isFollowing: !currentProfile.user.isFollowing,
+                            followerCount: currentProfile.user.isFollowing
+                                ? currentProfile.user.followerCount - 1
+                                : currentProfile.user.followerCount + 1,
+                        },
+                    },
+                })
+            }
+        } catch (error) {
+            console.error("Error toggling follow:", error)
+            toast.error("Failed to update follow status")
             throw error
         }
     },
