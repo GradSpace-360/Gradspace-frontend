@@ -34,7 +34,7 @@ interface SidebarProps {
 
 const navLinks = (user: { username?: string } | null) => [
     { to: "/dashboard", icon: Home, label: "Home" },
-    { to: "/dashboard/explore", icon: Search, label: "Explore" },
+    { to: "/dashboard/explore", icon: Search, label: "Connect" },
     { to: "/dashboard/job-portal", icon: Briefcase, label: "Job Portal" },
     { to: "/dashboard/events", icon: Calendar, label: "Events" },
     { to: "/dashboard/projects", icon: Layers, label: "Project Shelf" },
