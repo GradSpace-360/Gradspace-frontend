@@ -9,6 +9,7 @@ import { useEffect } from "react"
 import { NavLink } from "react-router-dom"
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -51,8 +52,28 @@ function NotificationsPage() {
     }, [fetchNotifications])
 
     if (loading) return <NotificationSkeleton />
-    if (error) return <div className="p-4 text-red-500">Error: {error}</div>
-
+    if (error)
+        return (
+            <div className="p-6 dark:text-gray-300 text-gray-600 flex items-center justify-center h-[90vh] ">
+                <div className="flex flex-col items-center justify-center py-10 px-6  max-w-md w-full">
+                    <BellIcon className="size-14 text-gray-400 mb-4" />
+                    <h3 className="text-xl font-semibold mb-2 text-pretty ">
+                        No Notifications Yet
+                    </h3>
+                    <p className="text-center text-sm mb-4">
+                        When someone follows you, likes your post, or comments,
+                        you’ll see it here. Stay tuned!
+                    </p>
+                    <Button
+                        variant={"outline"}
+                        className="mt-4 px-4 py-2 "
+                        onClick={() => fetchNotifications()}
+                    >
+                        Refresh
+                    </Button>
+                </div>
+            </div>
+        )
     return (
         <div className="space-y-4 lg:w-[80%] mx-auto">
             <Card className="border-none shadow-none">
