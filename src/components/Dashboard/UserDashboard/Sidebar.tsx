@@ -38,7 +38,7 @@ const navLinks = (user: { username?: string } | null) => [
     { to: "/dashboard/job-portal", icon: Briefcase, label: "Job Portal" },
     { to: "/dashboard/events", icon: Calendar, label: "Events" },
     { to: "/dashboard/projects", icon: Layers, label: "Project Shelf" },
-    { to: "/dashboard/chat", icon: Mail, label: "Chat" },
+    { to: "/dashboard/direct/inbox", icon: Mail, label: "Chat" },
     { to: "/dashboard/notifications", icon: Bell, label: "Notifications" },
     {
         to: `/dashboard/profile/${user?.username}`,
@@ -81,7 +81,7 @@ const SidebarContent = ({
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2 }}
         >
-            <div className="  xl:block pt-10 pb-10  pl-2 xl:px-10 px-2">
+            <div className="  xl:block pt-7 pb-10  pl-2 xl:px-10 px-2">
                 <h1 className="font-bold text-2xl    font-philosopher whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
                     <span className="inline xm:hidden xl:inline">
                         {" "}
@@ -247,14 +247,9 @@ const Sidebar: React.FC<SidebarProps> = ({
     return (
         <>
             {/* Desktop Sidebar */}
-            <motion.aside
-                className=" hidden xm:flex xm:flex-col xm:w-16 sm:w-20 xl:w-64 bg-card border-r border-border fixed h-full transition-all duration-0"
-                initial={{ x: -100 }}
-                animate={{ x: 0 }}
-                exit={{ x: -100 }}
-            >
+            <aside className=" hidden xm:flex xm:flex-col xm:w-16 sm:w-20 xl:w-64 bg-card border-r-2 shadow-2xl lg:shadow-sm border-border fixed h-full transition-all duration-0">
                 <SidebarContent isMobile={false} onClose={closeMenu} />
-            </motion.aside>
+            </aside>
 
             {/* Mobile Sidebar */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
