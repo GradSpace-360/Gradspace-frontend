@@ -141,7 +141,10 @@ const App = () => {
                     <Route path="job-portal" element={<JobPortalPreview />} />
                     <Route path="explore" element={<Explore />} />
                     <Route path="events" element={<EventsPreview />} />
-                    <Route path="chat" element={<ChatPreview />} />
+                    {/* <Route path="chat" element={<ChatPreview />} /> */}
+                    <Route path="direct/inbox" element={<ChatPreview />} />
+                    <Route path="direct/t/:userId" element={<ChatPreview />} />
+
                     <Route path="projects" element={<ProjectShelfPreview />} />
                     <Route path="profile/:userName" element={<ProfilePreviewWrapper />} />
                     <Route path="settings" element={<SettingsPreview />} />
