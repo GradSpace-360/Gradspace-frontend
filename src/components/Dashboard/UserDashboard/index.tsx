@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { axiosPrivate } from "@/config/axiosInstance"
 import { useAuthStore } from "@/store/auth"
 
+import { useConversationStore } from "./Chat/conversationStore"
 import Sidebar from "./Sidebar"
 
 export default function Index() {
@@ -17,6 +18,13 @@ export default function Index() {
     const [lastScrollY, setLastScrollY] = useState(0)
     const { user } = useAuthStore()
     const profileImageUrl = user?.profile_image
+    const { selectedConversation } = useConversationStore()
+    useEffect(() => {
+        // Update conditions to hide header based on specific URL segments
+        const hideHeader = location.pathname.includes("direct/inbox")
+
+        setIsHeaderVisible(!hideHeader)
+    }, [location.pathname])
 
     useEffect(() => {
         const handleScroll = () => {
@@ -44,7 +52,7 @@ export default function Index() {
             icon: Bell,
             label: "Notifications",
         },
-        { path: "/dashboard/chat", icon: MessageCircle, label: "Chat" },
+        { path: "/dashboard/direct/inbox", icon: MessageCircle, label: "Chat" },
     ]
 
     return (
@@ -56,7 +64,7 @@ export default function Index() {
 
             <div className="flex-1 flex flex-col xm:ml-16 sm:ml-24 xl:ml-64">
                 <motion.header
-                    className="bg-background xl:hidden border-border p-4 flex items-center justify-between sticky top-0 z-50"
+                    className={`bg-background  xl:hidden border-border p-4 ${!isHeaderVisible && "hidden"} flex items-center justify-between sticky top-0 z-30`}
                     initial={{ y: 0 }}
                     animate={{ y: isHeaderVisible ? 0 : -100 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -76,7 +84,7 @@ export default function Index() {
                         </Button>
                     </div>
 
-                    <div className="flex-1 text-center">
+                    <div className="flex-1 text-left pl-3 xm:pl-0 xm:text-center">
                         <h1 className="xl:hidden font-bold text-xl font-philosopher whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
                             gradSpace
                         </h1>
@@ -85,14 +93,14 @@ export default function Index() {
                     <div className="xm:w-16" />
                 </motion.header>
 
-                <main className="flex-1 overflow-auto p-1 sm:p-2 w-full">
+                <main className="flex-1  overflow-auto p-0 sm:p-0 w-full">
                     <AnimatePresence mode="wait">
                         <Outlet />
                     </AnimatePresence>
                 </main>
 
                 <motion.nav
-                    className="xm:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border/40 z-50 shadow-sm"
+                    className={`xm:hidden ${!isHeaderVisible && selectedConversation && "hidden"} fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t-2 border-gray-300  dark:border-primary-foreground border-border/40 z-30 shadow-sm`}
                     initial={{ y: 0 }}
                     animate={{
                         y: isNavbarVisible ? 0 : 100,
