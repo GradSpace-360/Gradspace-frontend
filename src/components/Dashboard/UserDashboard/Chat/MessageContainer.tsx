@@ -4,7 +4,7 @@ import toast from "react-hot-toast"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { axiosPrivate } from "@/config/axiosInstance"
-import { useSocket } from "@/context/socketContext2"
+import { useSocket } from "@/context/SocketContext"
 import { cn } from "@/lib/utils"
 import { useAuthStore } from "@/store/auth"
 

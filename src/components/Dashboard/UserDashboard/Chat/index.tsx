@@ -13,7 +13,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { axiosPrivate } from "@/config/axiosInstance"
-import { useSocket } from "@/context/socketContext2"
+import { useSocket } from "@/context/SocketContext"
 import useDebounce from "@/hooks/useDebounce"
 import { useAuthStore } from "@/store/auth"
 
