@@ -21,6 +21,7 @@ import formatDate from "@/lib/utils"
 import { useAuthStore } from "@/store/auth"
 import { useProfileStore } from "@/store/user/profile"
 
+// import { useChatStore } from "../Chat2/store"
 import { TimelineItem } from "./TimeLineItem"
 import { UserPostGrid } from "./UserPostGrid"
 
@@ -36,10 +37,11 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
     const { profileData, loading, error, fetchProfile, toggleFollow } =
         useProfileStore()
     const navigate = useNavigate()
-
+    // const { setSelectedUser } = useChatStore()
     useEffect(() => {
         fetchProfile(userName)
     }, [userName, fetchProfile])
+    console.log()
 
     if (loading) return <div></div>
     if (error)
@@ -70,6 +72,8 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
     if (!profileData) return null
 
     const { user, profile, educations, experiences, socialLinks } = profileData
+    console.log(profile)
+    console.log("user:", user)
     const isCurrentUser = authUser?.username === userName
     return (
         <div className="min-h-screen ">
@@ -253,6 +257,11 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
                                                     variant="secondary"
                                                     className="flex-1 sm:flex-none"
                                                     size="sm"
+                                                    onClick={() => {
+                                                        navigate(
+                                                            `/dashboard/direct/t/${user.id}`
+                                                        )
+                                                    }}
                                                 >
                                                     Message
                                                 </Button>
