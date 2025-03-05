@@ -39,7 +39,7 @@ const MessageInput = ({ setMessages, recipientId }: MessageInputProps) => {
                 throw new Error("Failed to send message")
             }
 
-            setMessages((prev) => [...prev, data])
+            setMessages((prev) => (Array.isArray(prev) ? [...prev, data] : [data]));
 
             setConversations((prevConvs) =>
                 prevConvs.map((conv) =>

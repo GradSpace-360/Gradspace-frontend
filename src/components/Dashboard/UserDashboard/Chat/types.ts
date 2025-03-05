@@ -23,6 +23,7 @@ export interface Message {
     id: string
     seen: boolean
     senderId: string
+    receiverId: string
     text: string
     createdAt: string
 }

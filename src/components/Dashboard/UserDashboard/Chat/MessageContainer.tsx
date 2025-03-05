@@ -18,6 +18,7 @@ interface NewMessage {
     seen: boolean
     conversationId: string
     senderId: string
+    receiverId: string
     text: string
     createdAt: string
 }
@@ -30,10 +31,19 @@ const MessageContainer = () => {
     const { user: currentUser } = useAuthStore()
     const { socket } = useSocket()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    var newMessage: NewMessage
 
     const handleClearChat = () => {
-        // TODO: Implement clear chat functionality
-        console.log("Clearing chat...")
+        try {
+            axiosPrivate.post(
+                `/messages/conversation/${selectedConversation.id}/clear/`
+            )
+            toast.success("Cleared message")
+        }
+        catch {
+            toast.error("Unable to clear")
+        }
+        
     }
     function useClickOutside(
         ref: React.RefObject<HTMLElement>,
@@ -87,7 +97,7 @@ const MessageContainer = () => {
             try {
                 const data = JSON.parse(event.data)
                 if (data.type === "NEW_MESSAGE") {
-                    const newMessage: NewMessage = data.message
+                    newMessage = data.message
                     if (
                         selectedConversation?.id === newMessage.conversationId
                     ) {
@@ -97,6 +107,7 @@ const MessageContainer = () => {
                             id: newMessage.id,
                             seen: newMessage.seen,
                             senderId: newMessage.senderId,
+                            receiverId: newMessage.receiverId,
                             text: newMessage.text,
                             createdAt: newMessage.createdAt,
                         }
@@ -143,6 +154,7 @@ const MessageContainer = () => {
     // MARK_MESSAGES_AS_SEEN event listener
     useEffect(() => {
         if (!socket) return
+        if (!messages) return 
         const lastMessageIsFromOtherUser =
             messages[messages.length - 1]?.senderId !== currentUser?.id
         if (lastMessageIsFromOtherUser) {
@@ -328,25 +340,22 @@ const MessageContainer = () => {
                         </div>
                     ))}
 
-                {!loadingMessages &&
-                    messages.map((message, index) => (
-                        <div
-                            key={message.id}
-                            className="flex flex-col"
-                            ref={
-                                index === messages.length - 1
-                                    ? messageEndRef
-                                    : null
-                            }
-                        >
-                            <Message
-                                message={message}
-                                ownMessage={
-                                    currentUser!.id === message.senderId
-                                }
-                            />
-                        </div>
-                    ))}
+                    {!loadingMessages && messages ? (
+                        messages.map((message, index) => (
+                            <div
+                                key={message.id}
+                                className="flex flex-col"
+                                ref={index === messages.length - 1 ? messageEndRef : null}
+                            >
+                                <Message
+                                    message={message}
+                                    ownMessage={currentUser!.id === message.senderId}
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        !loadingMessages && <p>No messages available.</p> // Optional fallback UI
+                    )}
             </div>
             <MessageInput
                 setMessages={setMessages}
