@@ -59,8 +59,8 @@ export function PostCard({ post }: { post: Post }) {
     return (
         <>
             {/* Main Post Card */}
-            <Card className="mb-6 rounded-md shadow-sm">
-                <CardHeader className="flex flex-row items-center gap-4 pb-3">
+            <Card className="mb-6 rounded-md shadow-md p-0 border border-muted">
+                <CardHeader className="flex flex-row items-center pl-3 pt-3 gap-4 pb-2">
                     <NavLink
                         to={`/dashboard/profile/${post.author.username}`}
                         className="block"
@@ -91,22 +91,22 @@ export function PostCard({ post }: { post: Post }) {
                     </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4 pb-3">
-                    <p className="text-base leading-relaxed break-words">
+                <CardContent className="space-y-4 pb-3  p-1">
+                    <p className="text-base pl-4 leading-relaxed break-words ">
                         {post.content}
                     </p>
                     {post.image && (
-                        <div className="rounded-sm overflow-hidden border max-h-96">
+                        <div className="relative w-full pb-[100%] overflow-hidden rounded-sm">
                             <img
                                 src={`${axiosPrivate.defaults.baseURL}/${post.image}`}
                                 alt="Post"
-                                className="w-full h-full object-cover"
+                                className="absolute top-0 left-0 w-full h-full object-cover"
                             />
                         </div>
                     )}
                 </CardContent>
 
-                <CardFooter className="gap-4">
+                <CardFooter className="gap-4 p-1">
                     <Button
                         variant="ghost"
                         size="sm"
