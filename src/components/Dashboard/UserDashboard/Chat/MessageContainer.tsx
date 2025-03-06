@@ -29,22 +29,36 @@ const MessageContainer = () => {
     const { setConversations, selectedConversation, setSelectedConversation } =
         useConversationStore()
     const { user: currentUser } = useAuthStore()
-    const { socket } = useSocket()
+    const { socket, onlineUsers } = useSocket()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    var newMessage: NewMessage
+    let newMessage: NewMessage
 
-    const handleClearChat = () => {
+    const handleClearChat = async () => {
         try {
-            axiosPrivate.post(
-                `/messages/conversation/${selectedConversation.id}/clear/`
+            await axiosPrivate.post(
+                `/messages/conversation/${selectedConversation!.id}/clear/`
             )
+            setMessages([])
+            setConversations((prev) => {
+                const updatedConversations = prev.map((conversation) => {
+                    if (conversation.id === selectedConversation?.id) {
+                        return {
+                            ...conversation,
+                            lastMessage: "",
+                            lastMessageSenderId: "",
+                            lastMessageSeen: false,
+                        }
+                    }
+                    return conversation
+                })
+                return updatedConversations
+            })
             toast.success("Cleared message")
-        }
-        catch {
+        } catch {
             toast.error("Unable to clear")
         }
-        
     }
+
     function useClickOutside(
         ref: React.RefObject<HTMLElement>,
         callback: () => void
@@ -154,7 +168,7 @@ const MessageContainer = () => {
     // MARK_MESSAGES_AS_SEEN event listener
     useEffect(() => {
         if (!socket) return
-        if (!messages) return 
+        if (!messages) return
         const lastMessageIsFromOtherUser =
             messages[messages.length - 1]?.senderId !== currentUser?.id
         if (lastMessageIsFromOtherUser) {
@@ -218,6 +232,8 @@ const MessageContainer = () => {
         messageEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }, [messages])
 
+    console.log("selectedConversation", selectedConversation)
+    console.log("curre user", currentUser)
     // fetch the conversation based on the selected conversation id .
     useEffect(() => {
         const fetchMessages = async () => {
@@ -241,7 +257,7 @@ const MessageContainer = () => {
 
     const messageEndRef = useRef<HTMLDivElement>(null)
     return (
-        <div className="flex flex-1 justify-between flex-col  top-0  p-2 border-l-2 z-50 ">
+        <div className="flex flex-1 justify-between flex-col  top-0  p-2 border-l-0 xm:border-l-2 rounded-xl shadow-xl m-1 z-50 ">
             {/* ----------------------Message header------------------------------------------ */}
             <div className="flex h-14 w-full items-center justify-between border-b border-gray-200 px-4 dark:border-gray-700 dark:bg-primary-foreground bg-white/10 shadow-md rounded-full">
                 <div className="flex items-center gap-4">
@@ -275,10 +291,21 @@ const MessageContainer = () => {
                         </AvatarFallback>
                     </Avatar>
 
-                    <div className="flex min-w-0 flex-1 items-center">
+                    <div className="flex min-w-0 flex-1 flex-col ">
                         <h4 className="truncate text-base font-semibold text-gray-900 dark:text-gray-100">
                             {userFullName}
                         </h4>
+
+                        <h6 className="text-xs items-start text-gray-500 dark:text-gray-400">
+                            {onlineUsers.includes(
+                                selectedConversation!.participant1Id ===
+                                    currentUser?.id
+                                    ? selectedConversation!.participant2Id
+                                    : selectedConversation!.participant1Id
+                            )
+                                ? "Online"
+                                : "Offline"}
+                        </h6>
                     </div>
                 </div>
 
@@ -340,22 +367,32 @@ const MessageContainer = () => {
                         </div>
                     ))}
 
-                    {!loadingMessages && messages ? (
-                        messages.map((message, index) => (
-                            <div
-                                key={message.id}
-                                className="flex flex-col"
-                                ref={index === messages.length - 1 ? messageEndRef : null}
-                            >
-                                <Message
-                                    message={message}
-                                    ownMessage={currentUser!.id === message.senderId}
-                                />
-                            </div>
-                        ))
-                    ) : (
-                        !loadingMessages && <p>No messages available.</p> // Optional fallback UI
-                    )}
+                {
+                    !loadingMessages && messages.length > 0
+                        ? messages.map((message, index) => (
+                              <div
+                                  key={message.id}
+                                  className="flex flex-col"
+                                  ref={
+                                      index === messages.length - 1
+                                          ? messageEndRef
+                                          : null
+                                  }
+                              >
+                                  <Message
+                                      message={message}
+                                      ownMessage={
+                                          currentUser!.id === message.senderId
+                                      }
+                                  />
+                              </div>
+                          ))
+                        : !loadingMessages && (
+                              <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+                                  No messages available.
+                              </p>
+                          ) // Optional fallback UI
+                }
             </div>
             <MessageInput
                 setMessages={setMessages}
