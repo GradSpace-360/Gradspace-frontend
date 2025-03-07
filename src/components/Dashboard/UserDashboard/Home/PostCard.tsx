@@ -59,7 +59,7 @@ export function PostCard({ post }: { post: Post }) {
     return (
         <>
             {/* Main Post Card */}
-            <Card className="mb-6 rounded-md shadow-md p-0 border border-muted">
+            <Card className="mb-6 rounded-md shadow-md p-0 border dark:border-muted ">
                 <CardHeader className="flex flex-row items-center pl-3 pt-3 gap-4 pb-2">
                     <NavLink
                         to={`/dashboard/profile/${post.author.username}`}
