@@ -38,7 +38,7 @@ const navLinks = (user: { username?: string } | null) => [
     { to: "/dashboard/job-portal", icon: Briefcase, label: "Job Portal" },
     { to: "/dashboard/events", icon: Calendar, label: "Events" },
     { to: "/dashboard/projects", icon: Layers, label: "Project Shelf" },
-    { to: "/dashboard/direct/inbox", icon: Mail, label: "Chat" },
+    { to: "/dashboard/direct/inbox", icon: Mail, label: "Messages" },
     { to: "/dashboard/notifications", icon: Bell, label: "Notifications" },
     {
         to: `/dashboard/profile/${user?.username}`,
