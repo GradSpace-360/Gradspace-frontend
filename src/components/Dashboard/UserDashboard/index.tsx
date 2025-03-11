@@ -14,8 +14,8 @@ export default function Index() {
     const location = useLocation()
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
     const [isHeaderVisible, setIsHeaderVisible] = useState(true)
-    const [isNavbarVisible, setIsNavbarVisible] = useState(true)
-    const [lastScrollY, setLastScrollY] = useState(0)
+    // const [isNavbarVisible, setIsNavbarVisible] = useState(true)
+    // const [lastScrollY, setLastScrollY] = useState(0)
     const { user } = useAuthStore()
     const profileImageUrl = user?.profile_image
     const { selectedConversation } = useConversationStore()
@@ -26,22 +26,26 @@ export default function Index() {
         setIsHeaderVisible(!hideHeader)
     }, [location.pathname])
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY
-            if (currentScrollY > lastScrollY && currentScrollY > 50) {
-                setIsHeaderVisible(false)
-                setIsNavbarVisible(false)
-            } else {
-                setIsHeaderVisible(true)
-                setIsNavbarVisible(true)
-            }
-            setLastScrollY(currentScrollY)
-        }
+    //optional
+    //GOAL:This code causes the header to disappear when scrolling down.
+    //BUG : oscillation of the header when scrolling down at the start and end of the page.
+    //FIX : try to fix
+    // useEffect(() => {
+    //     const handleScroll = () => {
+    //         const currentScrollY = window.scrollY
+    //         if (currentScrollY > lastScrollY && currentScrollY > 10) {
+    //             setIsHeaderVisible(false)
+    //             setIsNavbarVisible(false)
+    //         } else {
+    //             setIsHeaderVisible(true)
+    //             setIsNavbarVisible(true)
+    //         }
+    //         setLastScrollY(currentScrollY)
+    //     }
 
-        window.addEventListener("scroll", handleScroll)
-        return () => window.removeEventListener("scroll", handleScroll)
-    }, [lastScrollY])
+    //     window.addEventListener("scroll", handleScroll)
+    //     return () => window.removeEventListener("scroll", handleScroll)
+    // }, [lastScrollY])
 
     const navItems = [
         { path: "/dashboard", icon: Home, label: "Home" },
@@ -93,26 +97,28 @@ export default function Index() {
                     <div className="xm:w-16" />
                 </motion.header>
 
-                <main className="flex-1  overflow-auto p-0 sm:p-0 w-full">
+                <main
+                    className={`flex-1  overflow-auto p-0 sm:p-0 w-full  ${isHeaderVisible && "pb-14"}`}
+                >
                     <AnimatePresence mode="wait">
                         <Outlet />
                     </AnimatePresence>
                 </main>
 
                 <motion.nav
-                    className={`xm:hidden ${!isHeaderVisible && selectedConversation && "hidden"} fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t-2 border-gray-300  dark:border-primary-foreground border-border/40 z-30 shadow-sm`}
+                    className={`xm:hidden ${!isHeaderVisible && selectedConversation && "hidden"} fixed bottom-0 -mb-3 pb-2 left-0 right-0 bg-background/95 backdrop-blur border-t-2 border-gray-300  dark:border-primary-foreground border-border/40 z-30 shadow-sm`}
                     initial={{ y: 0 }}
-                    animate={{
-                        y: isNavbarVisible ? 0 : 100,
-                        opacity: isNavbarVisible ? 1 : 0.7,
-                    }}
+                    // animate={{
+                    //     y: isNavbarVisible ? 0 : 100,
+                    //     opacity: isNavbarVisible ? 1 : 0.7,
+                    // }}
                     transition={{
                         duration: 0.3,
                         ease: [0.25, 0.46, 0.45, 0.94],
                         opacity: { duration: 0.2 },
                     }}
                 >
-                    <div className="grid grid-cols-5 gap-1 px-2 py-3">
+                    <div className="grid grid-cols-5 gap-1 px-2 py-3 ">
                         {navItems.map(({ path, icon: Icon }) => {
                             const isActive = location.pathname === path
                             return (
