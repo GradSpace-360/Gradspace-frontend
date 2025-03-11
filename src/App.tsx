@@ -11,6 +11,10 @@ import EventsPreview from "./components/Dashboard/UserDashboard/Events"
 import Explore from "./components/Dashboard/UserDashboard/Explore"
 import HomePreview from "./components/Dashboard/UserDashboard/Home"
 import JobPortalPreview from "./components/Dashboard/UserDashboard/Jobs"
+import JobPage from "./components/Dashboard/UserDashboard/Jobs/Job"
+import MyJobs from "./components/Dashboard/UserDashboard/Jobs/MyJobs"
+import PostJob from "./components/Dashboard/UserDashboard/Jobs/PostJob"
+import SavedJobs from "./components/Dashboard/UserDashboard/Jobs/SavedJobs"
 import ProfilePreview from "./components/Dashboard/UserDashboard/Profile"
 import ProjectShelfPreview from "./components/Dashboard/UserDashboard/ProjectShelf"
 import SettingsPreview from "./components/Dashboard/UserDashboard/Settings"
@@ -139,6 +143,11 @@ const App = () => {
                     >
                     <Route index element={<HomePreview />} />
                     <Route path="job-portal" element={<JobPortalPreview />} />
+                    <Route path="job/:id" element={<JobPage />} />
+                    <Route path="post-job" element={<PostJob />} />
+                    <Route path="saved-jobs" element={<SavedJobs />} />
+                    <Route path="my-jobs" element={<MyJobs />} />
+
                     <Route path="explore" element={<Explore />} />
                     <Route path="events" element={<EventsPreview />} />
                     {/* <Route path="chat" element={<ChatPreview />} /> */}
