@@ -1,8 +1,8 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { BarLoader } from "react-spinners"
 
 import { Pagination } from "@/components/Pagination"
+import JobLoadingSkeleton from "@/skeletons/JobLoadingSkeleton"
 import { useAuthStore } from "@/store/auth"
 import { useJobStore } from "@/store/user/job"
 
@@ -33,7 +33,11 @@ const MyJobs = () => {
     )
 
     if (loadingJobs) {
-        return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
+        ;<div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, index) => (
+                <JobLoadingSkeleton key={index} />
+            ))}
+        </div>
     }
     if (user?.role !== "Alumni" && user?.role !== "Faculty") {
         navigate("/dashboard/job-portal")

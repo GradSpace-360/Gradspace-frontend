@@ -1,7 +1,7 @@
 import { useEffect } from "react"
-import { BarLoader } from "react-spinners"
 
 import { Pagination } from "@/components/Pagination"
+import JobLoadingSkeleton from "@/skeletons/JobLoadingSkeleton"
 import { useJobStore } from "@/store/user/job"
 import { Job } from "@/types/user/Job/job"
 
@@ -35,7 +35,11 @@ const SavedJobs = () => {
                 Saved Jobs
             </h1>
             {loadingSavedJobs && (
-                <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
+                <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: 6 }).map((_, index) => (
+                        <JobLoadingSkeleton key={index} />
+                    ))}
+                </div>
             )}
 
             {!loadingSavedJobs && (

@@ -2,7 +2,6 @@ import { HeartIcon, SquarePenIcon } from "lucide-react"
 import { useEffect } from "react"
 import { Briefcase } from "react-feather"
 import { NavLink } from "react-router-dom"
-import { BarLoader } from "react-spinners"
 
 import JobCard from "@/components/Dashboard/UserDashboard/Jobs/JobCard"
 import { Pagination } from "@/components/Pagination"
@@ -16,6 +15,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import JobLoadingSkeleton from "@/skeletons/JobLoadingSkeleton"
 import { useAuthStore } from "@/store/auth"
 import { useCompanyStore } from "@/store/user/company"
 import { useJobStore } from "@/store/user/job"
@@ -114,16 +114,16 @@ const JobListing = () => {
                 {/* mobile view -> saved-jobs,  my-jobs , post-job  */}
                 <div className=" gap-5 flex justify-between sm:hidden pb-3   ">
                     <div className=" gap-5  flex-row flex  ">
-                        {user?.role == "Alumni" ||
-                            (user?.role == "Faculty" && (
-                                <NavLink
-                                    to="/dashboard/my-jobs"
-                                    className="flex items-center gap-2 btn btn-outine  p-1 1 rounded-2xl border-2 px-2 hover:bg-primary-foreground  border-border shadow-sm"
-                                >
-                                    <Briefcase className="w-4 h-4" />
-                                    My Jobs
-                                </NavLink>
-                            ))}
+                        {(user?.role == "Alumni" ||
+                            user?.role == "Faculty") && (
+                            <NavLink
+                                to="/dashboard/my-jobs"
+                                className="flex items-center gap-2 btn btn-outine  p-1 1 rounded-2xl border-2 px-2 hover:bg-primary-foreground  border-border shadow-sm"
+                            >
+                                <Briefcase className="w-4 h-4" />
+                                My Jobs
+                            </NavLink>
+                        )}
                         <NavLink
                             to="/dashboard/saved-jobs"
                             className="flex items-center gap-2 btn btn-outine  p-1 1 rounded-2xl border-2 px-2 hover:bg-primary-foreground  border-border shadow-sm"
@@ -147,7 +147,7 @@ const JobListing = () => {
 
                 <form
                     onSubmit={handleSearch}
-                    className="h-14 flex flex-row w-full gap-2 items-center mb-3"
+                    className="h-10 flex flex-row w-full gap-2 items-center mb-3"
                 >
                     <Input
                         type="text"
@@ -225,9 +225,12 @@ const JobListing = () => {
                 </div>
 
                 {loadingJobs && (
-                    <BarLoader className="mt-4" width="100%" color="#36d7b7" />
+                    <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {Array.from({ length: 6 }).map((_, index) => (
+                            <JobLoadingSkeleton key={index} />
+                        ))}
+                    </div>
                 )}
-
                 {!loadingJobs && (
                     <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {jobs?.length ? (

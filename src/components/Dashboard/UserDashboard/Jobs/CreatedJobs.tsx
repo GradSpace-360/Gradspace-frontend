@@ -1,5 +1,4 @@
-import { BarLoader } from "react-spinners"
-
+import JobLoadingSkeleton from "@/skeletons/JobLoadingSkeleton"
 import { useJobStore } from "@/store/user/job"
 import { Job } from "@/types/user/Job/job"
 
@@ -15,7 +14,11 @@ const CreatedJobs = ({ jobs }: Props) => {
     return (
         <div>
             {isLoading ? (
-                <BarLoader className="mt-4" width={"100%"} color="#36d7b7" />
+                <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: 6 }).map((_, index) => (
+                        <JobLoadingSkeleton key={index} />
+                    ))}
+                </div>
             ) : (
                 <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {jobs?.length ? (
