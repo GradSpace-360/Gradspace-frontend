@@ -72,6 +72,12 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
     if (!profileData) return null
 
     const { user, profile, educations, experiences, socialLinks } = profileData
+    console.log("exp", experiences)
+    const sortedExperiences = [...experiences].sort(
+        (a, b) =>
+            new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+    )
+
     console.log(profile)
     console.log("user:", user)
     const isCurrentUser = authUser?.username === userName
@@ -527,9 +533,9 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
                                     </div>
                                 ))}
                             {activeTab === "EXPERIENCE" &&
-                                (experiences.length > 0 ? (
+                                (sortedExperiences.length > 0 ? (
                                     <div className="pl-4">
-                                        {experiences.map((exp, index) => (
+                                        {sortedExperiences.map((exp, index) => (
                                             <TimelineItem
                                                 key={index}
                                                 title={exp.position}
