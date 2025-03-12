@@ -7,7 +7,12 @@ import  Notifications  from "@/components/Dashboard/UserDashboard/Notifications"
 import { useAuthStore } from "@/store/auth"
 
 import ChatPreview from "./components/Dashboard/UserDashboard/Chat"
+// import EventsPreview from "./components/Dashboard/UserDashboard/Events"
 import EventsPreview from "./components/Dashboard/UserDashboard/Events"
+import EventPage from "./components/Dashboard/UserDashboard/Events/Event"
+import MyEvents from "./components/Dashboard/UserDashboard/Events/MyEvents"
+import PostEvent from "./components/Dashboard/UserDashboard/Events/PostEvent"
+import SavedEvents from "./components/Dashboard/UserDashboard/Events/SavedEvents"
 import Explore from "./components/Dashboard/UserDashboard/Explore"
 import HomePreview from "./components/Dashboard/UserDashboard/Home"
 import JobPortalPreview from "./components/Dashboard/UserDashboard/Jobs"
@@ -148,8 +153,16 @@ const App = () => {
                     <Route path="saved-jobs" element={<SavedJobs />} />
                     <Route path="my-jobs" element={<MyJobs />} />
 
+
+
+
                     <Route path="explore" element={<Explore />} />
                     <Route path="events" element={<EventsPreview />} />
+                    <Route path="event/:id" element={<EventPage />} />
+                    <Route path="post-event" element={<PostEvent />} />
+                    <Route path="saved-events" element={<SavedEvents />} />
+                    <Route path="my-events" element={<MyEvents />} />
+                    
                     {/* <Route path="chat" element={<ChatPreview />} /> */}
                     <Route path="direct/inbox" element={<ChatPreview />} />
                     <Route path="direct/t/:userId" element={<ChatPreview />} />
