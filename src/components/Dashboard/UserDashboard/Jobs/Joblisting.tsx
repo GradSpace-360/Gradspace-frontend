@@ -73,10 +73,17 @@ const JobListing = () => {
         <>
             <div className="">
                 <div className="flex items-center  justify-between pb-5">
-                    <h1 className="hidden md:block"></h1>
-                    <h1 className="gradient-title font-extrabold text-xl sm:text-4xl font-philosopher text-center">
-                        Latest Jobs
+                    {/* <h1 className="hidden md:block"></h1> */}
+                    <h1 className="flex items-center gap-2 gradient-title font-semibold text-xl sm:text-3xl font-philosopher">
+                        <Briefcase className="w-6 h-6" />
+                        Jobs
                     </h1>
+
+                    {/* <h1 className="flex items-center gap-2 gradient-title font-semibold text-xl sm:text-3xl font-philosopher">
+                    <CalendarIcon className="w-6 h-6" />
+                    Events
+                </h1> */}
+
                     {/* desktop view -> saved-jobs,  my-jobs , post-job  */}
                     <div className=" gap-5 sm:flex-row sm:flex  hidden">
                         {user?.role == "Alumni" || user?.role == "Faculty" ? (
