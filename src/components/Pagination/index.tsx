@@ -6,7 +6,7 @@
  * and loading state. The component also displays the current page and total pages.
  */
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 
@@ -20,27 +20,58 @@ export function Pagination({
     onPageChange: (page: number) => void
 }) {
     const [isLoading, setIsLoading] = useState(false)
+    const scrollDirection = useRef<"next" | "prev" | null>(null)
+    const scrollPositions = useRef<{ [key: number]: number }>({})
+
+    const handleScrollPosition = () => {
+        // Save current scroll position before page change
+        scrollPositions.current[currentPage] = window.scrollY
+    }
 
     const handlePrevious = () => {
         if (currentPage > 1 && !isLoading) {
+            handleScrollPosition()
             setIsLoading(true)
+            scrollDirection.current = "prev"
             onPageChange(currentPage - 1)
         }
     }
 
     const handleNext = () => {
         if (currentPage < totalPages && !isLoading) {
-            setIsLoading(true) // Disable buttons
+            handleScrollPosition()
+            setIsLoading(true)
+            scrollDirection.current = "next"
             onPageChange(currentPage + 1)
         }
     }
 
-    // Re-enable buttons after a short delay
+    useEffect(() => {
+        if (scrollDirection.current === "next") {
+            // Instant scroll to top without animation
+            window.scrollTo(0, 0)
+        } else if (scrollDirection.current === "prev") {
+            // Restore previous page's scroll position
+            const prevPosition =
+                scrollPositions.current[currentPage] ||
+                document.documentElement.scrollHeight
+            window.scrollTo(0, prevPosition)
+        }
+        scrollDirection.current = null
+    }, [currentPage])
+
+    // Restore scroll position after render
+    useEffect(() => {
+        const savedPosition = scrollPositions.current[currentPage]
+        if (savedPosition !== undefined) {
+            window.scrollTo(0, savedPosition)
+        }
+    }, [currentPage])
+
+    // Re-enable buttons after short delay
     useEffect(() => {
         if (isLoading) {
-            const timer = setTimeout(() => {
-                setIsLoading(false)
-            }, 300) // 300ms delay to prevent rapid clicks
+            const timer = setTimeout(() => setIsLoading(false), 300)
             return () => clearTimeout(timer)
         }
     }, [isLoading])
@@ -49,7 +80,7 @@ export function Pagination({
         <div className="flex justify-between items-center mt-4">
             <Button
                 onClick={handlePrevious}
-                disabled={currentPage === 1 || isLoading} // Disable if loading or on first page
+                disabled={currentPage === 1 || isLoading}
                 variant="outline"
             >
                 Previous
@@ -59,7 +90,7 @@ export function Pagination({
             </span>
             <Button
                 onClick={handleNext}
-                disabled={currentPage === totalPages || isLoading} // Disable if loading or on last page
+                disabled={currentPage === totalPages || isLoading}
                 variant="outline"
             >
                 Next
