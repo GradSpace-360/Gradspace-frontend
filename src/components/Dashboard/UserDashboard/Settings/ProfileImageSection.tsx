@@ -8,6 +8,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
+import { useAuthStore } from "@/store/auth"
 import { ProfileData } from "@/types/user/Profile"
 
 interface ProfileImageSectionProps {
@@ -27,6 +28,8 @@ export const ProfileImageSection = ({
 }: ProfileImageSectionProps) => {
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [showImageDialog, setShowImageDialog] = useState(false)
+    const { user } = useAuthStore()
+    const FullName = user?.full_name
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
@@ -82,7 +85,7 @@ export const ProfileImageSection = ({
                         Change photo
                     </Button>
                 </div>
-                <h3 className="text-lg pt-5 font-semibold">SUJITH</h3>
+                <h3 className="text-lg pt-5 font-semibold">{FullName}</h3>
             </div>
 
             <Dialog open={showImageDialog} onOpenChange={setShowImageDialog}>
