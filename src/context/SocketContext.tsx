@@ -186,7 +186,11 @@ export const SocketContextProvider = ({
         const connectSocket = () => {
             const protocol =
                 window.location.protocol === "https:" ? "wss:" : "ws:"
-            const wsUrl = `${protocol}//localhost:8003/ws?userId=${user.id}`
+            const baseUrl =
+                process.env.NODE_ENV === "production"
+                    ? "api.gradspace.me"
+                    : "localhost:8003"
+            const wsUrl = `${protocol}//${baseUrl}/ws?userId=${user.id}`
             ws = new WebSocket(wsUrl)
 
             // Event handlers using addEventListener
