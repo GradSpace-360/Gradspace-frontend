@@ -22,6 +22,10 @@ import PostJob from "./components/Dashboard/UserDashboard/Jobs/PostJob"
 import SavedJobs from "./components/Dashboard/UserDashboard/Jobs/SavedJobs"
 import ProfilePreview from "./components/Dashboard/UserDashboard/Profile"
 import ProjectShelfPreview from "./components/Dashboard/UserDashboard/ProjectShelf"
+import MyProjects from "./components/Dashboard/UserDashboard/ProjectShelf/MyProjects"
+import PostProject from "./components/Dashboard/UserDashboard/ProjectShelf/PostProject"
+import ProjectPage from "./components/Dashboard/UserDashboard/ProjectShelf/Project"
+import SavedProjects from "./components/Dashboard/UserDashboard/ProjectShelf/SavedProjects"
 import SettingsPreview from "./components/Dashboard/UserDashboard/Settings"
 import PreLoader from "./components/PreLoader" 
 
@@ -168,6 +172,11 @@ const App = () => {
                     <Route path="direct/t/:userId" element={<ChatPreview />} />
 
                     <Route path="projects" element={<ProjectShelfPreview />} />
+                    <Route path="project/:id" element={<ProjectPage />} />
+                    <Route path="post-project" element={<PostProject />} />
+                    <Route path="saved-projects" element={<SavedProjects />} />
+                    <Route path="my-projects" element={<MyProjects />} />
+                    
                     <Route path="profile/:userName" element={<ProfilePreviewWrapper />} />
                     <Route path="settings" element={<SettingsPreview />} />
                     <Route path="notifications" element={<Notifications />} />
