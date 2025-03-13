@@ -213,8 +213,8 @@ const JobListing = () => {
                             <SelectValue placeholder="Filter by Job Type" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="Full Time">Full Time</SelectItem>
-                            <SelectItem value="Part Time">Part Time</SelectItem>
+                            <SelectItem value="Full-Time">Full Time</SelectItem>
+                            <SelectItem value="Part-Time">Part Time</SelectItem>
                             <SelectItem value="Internship">
                                 Internship
                             </SelectItem>
