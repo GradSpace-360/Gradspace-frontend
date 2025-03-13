@@ -187,7 +187,7 @@ export const SocketContextProvider = ({
             const protocol =
                 window.location.protocol === "https:" ? "wss:" : "ws:"
             const baseUrl =
-                process.env.NODE_ENV === "production"
+                window.location.protocol === "https:"
                     ? "api.gradspace.me"
                     : "localhost:8003"
             const wsUrl = `${protocol}//${baseUrl}/ws?userId=${user.id}`
