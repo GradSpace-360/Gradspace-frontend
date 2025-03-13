@@ -101,7 +101,7 @@ const SidebarContent = ({
                         to={link.to}
                         end={link.to === "/dashboard"}
                         className={({ isActive }) =>
-                            `block font-philosopher  relative ${isActive ? "text-primary" : "text-muted-foreground"}`
+                            `block font-philosopher pb-2 relative ${isActive ? "text-primary" : "text-muted-foreground"}`
                         }
                         onClick={onClose}
                     >
@@ -257,7 +257,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     {isMobileMenuOpen && (
                         <SheetContent
                             side="left"
-                            className="w-64 p-0 bg-card"
+                            className="w-64  p-0 bg-card"
                             forceMount
                         >
                             <VisuallyHidden>
@@ -272,7 +272,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                                 animate={{ x: 0 }}
                                 exit={{ x: "-100%" }}
                                 transition={{ type: "tween", duration: 0.2 }}
-                                className="h-full"
+                                className="h-full pl-5 "
                             >
                                 <SidebarContent
                                     isMobile={true}
