@@ -40,7 +40,7 @@ const JobListing = () => {
     useEffect(() => {
         fetchCompanies()
         fetchJobs()
-    }, [fetchCompanies, fetchJobs])
+    }, [fetchCompanies, fetchJobs, jobsFilters])
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
