@@ -45,7 +45,7 @@ const EventListing = () => {
     const navigate = useNavigate()
     useEffect(() => {
         fetchEvents()
-    }, [fetchEvents])
+    }, [fetchEvents, eventsFilters])
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
