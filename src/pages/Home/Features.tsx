@@ -4,7 +4,8 @@ import {
     Briefcase,
     Calendar,
     MessageCircle,
-    ShoppingBag,
+    Network,
+    // ShoppingBag,
     Users,
 } from "lucide-react"
 
@@ -16,11 +17,6 @@ const features = [
         title: "Alumni Social Network",
         description:
             "Connect, like, and comment on posts from fellow college alumni.",
-    },
-    {
-        icon: <ShoppingBag className="h-12 w-12" />,
-        title: "C2C Marketplace",
-        description: "Buy and sell items within your trusted alumni community.",
     },
     {
         icon: <MessageCircle className="h-12 w-12" />,
@@ -45,6 +41,12 @@ const features = [
         title: "Event Board",
         description:
             "Stay updated with alumni gatherings and networking events.",
+    },
+    {
+        icon: <Network className="h-12 w-12" />,
+        title: "Smart Connect",
+        description:
+            "Connect with like-minded alumni and students using filters.",
     },
 ]
 
