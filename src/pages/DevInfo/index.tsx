@@ -866,49 +866,6 @@ function DeveloperCard({
                     </div>
                 </div>
 
-                {loading ? (
-                    <div className="space-y-2 mb-4">
-                        <Skeleton className="h-5 w-full" />
-                        <Skeleton className="h-4 w-3/4" />
-                        <Skeleton className="h-4 w-2/3" />
-                        <Skeleton className="h-4 w-1/2" />
-                    </div>
-                ) : contributorData ? (
-                    <div className="mb-4 space-y-3">
-                        <h3 className="text-lg font-semibold">
-                            GitHub Activity:
-                        </h3>
-                        <div className="flex items-center gap-2">
-                            <GithubIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                            <span className="text-sm text-gray-600 dark:text-gray-400">
-                                {contributorData.contributions} contributions
-                            </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <GitPullRequest className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                            <a
-                                href={`${dev.github}/pulls`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-gray-600 dark:text-gray-400 hover:underline"
-                            >
-                                View pull requests
-                            </a>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Users className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                            <a
-                                href={`${dev.github}/issues`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-gray-600 dark:text-gray-400 hover:underline"
-                            >
-                                View issues
-                            </a>
-                        </div>
-                    </div>
-                ) : null}
-
                 <div className="flex justify-between items-center">
                     <div className="flex space-x-4">
                         <div>

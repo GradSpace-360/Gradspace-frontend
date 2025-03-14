@@ -7,13 +7,13 @@ import  Notifications  from "@/components/Dashboard/UserDashboard/Notifications"
 import { useAuthStore } from "@/store/auth"
 
 import ChatPreview from "./components/Dashboard/UserDashboard/Chat"
+import Connect from "./components/Dashboard/UserDashboard/Connect"
 // import EventsPreview from "./components/Dashboard/UserDashboard/Events"
 import EventsPreview from "./components/Dashboard/UserDashboard/Events"
 import EventPage from "./components/Dashboard/UserDashboard/Events/Event"
 import MyEvents from "./components/Dashboard/UserDashboard/Events/MyEvents"
 import PostEvent from "./components/Dashboard/UserDashboard/Events/PostEvent"
 import SavedEvents from "./components/Dashboard/UserDashboard/Events/SavedEvents"
-import Explore from "./components/Dashboard/UserDashboard/Explore"
 import HomePreview from "./components/Dashboard/UserDashboard/Home"
 import JobPortalPreview from "./components/Dashboard/UserDashboard/Jobs"
 import JobPage from "./components/Dashboard/UserDashboard/Jobs/Job"
@@ -160,7 +160,7 @@ const App = () => {
 
 
 
-                    <Route path="explore" element={<Explore />} />
+                    <Route path="explore" element={<Connect />} />
                     <Route path="events" element={<EventsPreview />} />
                     <Route path="event/:id" element={<EventPage />} />
                     <Route path="post-event" element={<PostEvent />} />
