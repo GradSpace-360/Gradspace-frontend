@@ -25,4 +25,6 @@ export interface UserFilters {
     search?: string
     page?: number
     limit?: number
+    skills?: string[]
+    interests?: string[]
 }
