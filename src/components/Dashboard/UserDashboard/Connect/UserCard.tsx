@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { axiosPrivate } from "@/config/axiosInstance"
 
 import { useUserStore } from "./user-store"
 
@@ -23,7 +24,7 @@ const UserCard = ({ user }: UserCardProps) => {
 
     const handleFollow = async () => {
         try {
-            await toggleFollow(user.id, user.isFollowing)
+            await toggleFollow(user.userName, user.isFollowing)
         } catch (error) {
             console.error("Failed to toggle follow:", error)
         }
@@ -33,7 +34,7 @@ const UserCard = ({ user }: UserCardProps) => {
         <div className="flex flex-col rounded-lg border p-4 shadow-sm">
             <div className="flex items-center gap-4">
                 <img
-                    src={user.profileImage || "/default-avatar.png"}
+                    src={`${axiosPrivate.defaults.baseURL}/${user.profileImage}`}
                     alt={user.fullName}
                     className="h-12 w-12 rounded-full object-cover"
                 />

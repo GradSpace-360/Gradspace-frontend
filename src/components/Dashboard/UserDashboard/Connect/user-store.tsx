@@ -73,31 +73,31 @@ export const useUserStore = create<UserState>((set, get) => ({
         }
     },
 
-    toggleFollow: async (userId, isFollowing) => {
+    toggleFollow: async (userName, isFollowing) => {
         try {
             // Optimistic update
             set((state) => ({
                 users: state.users.map((user) =>
-                    user.id === userId
+                    user.userName === userName
                         ? { ...user, isFollowing: !isFollowing }
                         : user
                 ),
                 suggestedUsers: state.suggestedUsers.map((user) =>
-                    user.id === userId
+                    user.userName === userName
                         ? { ...user, isFollowing: !isFollowing }
                         : user
                 ),
             }))
 
-            await axiosPrivate.post(`/profile/${userId}/follow`)
+            await axiosPrivate.post(`/profile/${userName}/follow`)
         } catch (error) {
             // Rollback on error
             set((state) => ({
                 users: state.users.map((user) =>
-                    user.id === userId ? { ...user, isFollowing } : user
+                    user.userName === userName ? { ...user, isFollowing } : user
                 ),
                 suggestedUsers: state.suggestedUsers.map((user) =>
-                    user.id === userId ? { ...user, isFollowing } : user
+                    user.userName === userName ? { ...user, isFollowing } : user
                 ),
             }))
             throw error
