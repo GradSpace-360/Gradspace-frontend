@@ -16,7 +16,8 @@ export default {
     			openSans: [
     				'Open Sans',
     				'sans-serif'
-    			]
+    			],
+				roboto: ['Roboto', 'sans-serif'],
     		},
     		borderRadius: {
     			lg: 'var(--radius)',
@@ -95,7 +96,10 @@ export default {
     			'accordion-down': 'accordion-down 0.2s ease-out',
     			'accordion-up': 'accordion-up 0.2s ease-out',
     			'shiny-text': 'shiny-text 8s infinite'
-    		}
+    		},
+			screens: {
+				xm: "600px", // Custom breakpoint for 500px, at production change 600px to 500px
+			  },
     	}
     },
     plugins: [require("tailwindcss-animate")],

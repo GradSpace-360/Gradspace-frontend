@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { useAuthStore } from "@/store/auth"
 import { useOnboardingStore } from "@/store/onboard"
 
 interface WelcomeFormData {
@@ -30,6 +31,7 @@ export function WelcomeStep() {
         },
     })
 
+    const { user } = useAuthStore()
     // Use a base64 string for previewing the image
     const [previewImage, setPreviewImage] = useState<string | null>(
         formData.profileImage
@@ -196,6 +198,10 @@ export function WelcomeStep() {
                             />
                             <p className="text-sm text-muted-foreground">
                                 upload profile picture (optional)
+                            </p>
+                            <p className="font-semibold font-philosopher text-lg">
+                                {" "}
+                                {user!.full_name}
                             </p>
                         </div>
 

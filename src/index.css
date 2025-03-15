@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap");
+@import "@fontsource/roboto";
 
 @tailwind base;
 @tailwind components;
@@ -58,6 +59,12 @@
         --chart-5: 27 87% 67%;
 
         --radius: 0.5rem;
+        /* Add scrollbar variables for light theme */
+        --scrollbar-track: 0 0% 95%;
+
+        --scrollbar-thumb: 0 0% 75%;
+
+        --scrollbar-thumb-hover: 0 0% 55%;
     }
     .dark {
         --background: 0 0% 3.9%;
@@ -107,6 +114,13 @@
         --chart-4: 280 65% 60%;
 
         --chart-5: 340 75% 55%;
+
+        /* Add scrollbar variables for dark theme */
+        --scrollbar-track: 215 28% 12%;
+
+        --scrollbar-thumb: 215 28% 25%;
+
+        --scrollbar-thumb-hover: 215 28% 35%;
     }
 }
 
@@ -126,4 +140,45 @@
 .scrollbar-hide {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/* Scrollbar styles using CSS variables */
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: hsl(var(--scrollbar-track));
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--scrollbar-thumb));
+    border-radius: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--scrollbar-thumb-hover));
+}
+
+.wmde-markdown ul {
+    list-style-type: disc;
+    padding-left: 25px;
+    /* color: hsl(var(--foreground));
+    background: hsl(var(--background)); */
+}
+
+.wmde-markdown ol {
+    list-style-type: decimal;
+    padding-left: 25px;
+    /* color: hsl(var(--foreground));
+    background: hsl(var(--background)); */
 }

@@ -75,8 +75,8 @@ const departments = [
     },
     {
         id: 2,
-        value: "Electrical and Electronic Engineering",
-        label: "Electrical and Electronic Engineering",
+        value: "Electrical and Electronics Engineering",
+        label: "Electrical and Electronics Engineering",
     },
     {
         id: 3,

@@ -1,11 +1,33 @@
 import { useEffect } from "react"
 // Lazy load pages and components to reduce the initial bundle size
 import { lazy, Suspense } from "react"
-import { Navigate, Route, Routes } from "react-router-dom"
+import {  Navigate, Route, Routes, useParams } from "react-router-dom"
 
+import  Notifications  from "@/components/Dashboard/UserDashboard/Notifications"
 import { useAuthStore } from "@/store/auth"
 
-import PreLoader from "./components/PreLoader" // PreLoader imported normally, not lazy-loaded
+import ChatPreview from "./components/Dashboard/UserDashboard/Chat"
+import Connect from "./components/Dashboard/UserDashboard/Connect"
+// import EventsPreview from "./components/Dashboard/UserDashboard/Events"
+import EventsPreview from "./components/Dashboard/UserDashboard/Events"
+import EventPage from "./components/Dashboard/UserDashboard/Events/Event"
+import MyEvents from "./components/Dashboard/UserDashboard/Events/MyEvents"
+import PostEvent from "./components/Dashboard/UserDashboard/Events/PostEvent"
+import SavedEvents from "./components/Dashboard/UserDashboard/Events/SavedEvents"
+import HomePreview from "./components/Dashboard/UserDashboard/Home"
+import JobPortalPreview from "./components/Dashboard/UserDashboard/Jobs"
+import JobPage from "./components/Dashboard/UserDashboard/Jobs/Job"
+import MyJobs from "./components/Dashboard/UserDashboard/Jobs/MyJobs"
+import PostJob from "./components/Dashboard/UserDashboard/Jobs/PostJob"
+import SavedJobs from "./components/Dashboard/UserDashboard/Jobs/SavedJobs"
+import ProfilePreview from "./components/Dashboard/UserDashboard/Profile"
+import ProjectShelfPreview from "./components/Dashboard/UserDashboard/ProjectShelf"
+import MyProjects from "./components/Dashboard/UserDashboard/ProjectShelf/MyProjects"
+import PostProject from "./components/Dashboard/UserDashboard/ProjectShelf/PostProject"
+import ProjectPage from "./components/Dashboard/UserDashboard/ProjectShelf/Project"
+import SavedProjects from "./components/Dashboard/UserDashboard/ProjectShelf/SavedProjects"
+import SettingsPreview from "./components/Dashboard/UserDashboard/Settings"
+import PreLoader from "./components/PreLoader" 
 
 // Lazy-loaded components/pages
 const EmailVerificationPage = lazy(
@@ -20,7 +42,7 @@ const DevInfo = lazy(() => import("./pages/DevInfo"))
 const HomePage = lazy(() => import("./pages/Home"))
 const PageNotFound = lazy(() => import("./pages/PageNotFound"))
 const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"))
-// const RedirectRoute = lazy(() => import("./routes/RedirectRoute"))
+const RedirectRoute = lazy(() => import("./routes/RedirectRoute"))
 const OnboardingPage = lazy(() => import("./pages/Onboard"))
 const ManualVerificationPending = lazy(
     () => import("./pages/Registration/ManualVerificationPending")
@@ -31,6 +53,11 @@ const ManualVerificationRejected = lazy(
 const RegisterRequestPage = lazy(
     () => import("./pages/Registration/RegisterRequest")
 )
+
+const ProfilePreviewWrapper = () => {  
+    const { userName } = useParams(); // Access the userName from the URL
+    return <ProfilePreview userName={userName || ""} />; 
+};
 
 const App = () => {
     const { isCheckingAuth, checkAuth, user } = useAuthStore()
@@ -50,9 +77,9 @@ const App = () => {
                 <Route
                     path="/"
                     element={
-                        // <RedirectRoute>
+                        <RedirectRoute>
                             <HomePage />
-                        // </RedirectRoute>
+                        </RedirectRoute>
                     }
                 />
 
@@ -61,9 +88,9 @@ const App = () => {
                 <Route
                     path="/register-request"
                     element={
-                        // <ProtectedRoute>
+                        //  <ProtectedRoute>
                         <RegisterRequestPage />
-                        // <ProtectedRoute>
+                        //  </ProtectedRoute>
                     }
                 />
                 <Route
@@ -77,26 +104,26 @@ const App = () => {
                 <Route
                     path="/register-rejected"
                     element={
-                        // <ProtectedRoute>
+                        <ProtectedRoute>
                         <ManualVerificationRejected />
-                        // </ProtectedRoute>
+                     </ProtectedRoute>
                     }
                 />
 
                 <Route
                     path="/login"
                     element={
-                        // <RedirectRoute>
+                        <RedirectRoute>
                             <LoginPage />
-                        // </RedirectRoute>
+                         </RedirectRoute>
                     }
                 />
                 <Route
                     path="/signup"
                     element={
-                        // <RedirectRoute>
+                        <RedirectRoute>
                             <SignupPage />
-                        // </RedirectRoute>
+                        </RedirectRoute>
                     }
                 />
                 <Route
@@ -112,18 +139,49 @@ const App = () => {
                     element={<ForgotPasswordPage />}
                 />
                 <Route
-                    path="/dashboard"
-                    element={
-                        <ProtectedRoute>
-                            {user ? (
-                                <DashboardPage userRole={user.role} />
-                            ) : (
-                                <Navigate to="/login" replace />
-                            )}
-                        </ProtectedRoute>
-                        // <DashboardPage userRole="Admin" />
-                    }
-                />
+                        path="/dashboard"
+                        element={
+                            <ProtectedRoute>
+                                {user ? (
+                                    <DashboardPage userRole={user.role} />
+                                ) : (
+                                    <Navigate to="/login" replace />
+                                )}
+                            </ProtectedRoute>
+                        }
+                    >
+                    <Route index element={<HomePreview />} />
+                    <Route path="job-portal" element={<JobPortalPreview />} />
+                    <Route path="job/:id" element={<JobPage />} />
+                    <Route path="post-job" element={<PostJob />} />
+                    <Route path="saved-jobs" element={<SavedJobs />} />
+                    <Route path="my-jobs" element={<MyJobs />} />
+
+
+
+
+                    <Route path="explore" element={<Connect />} />
+                    <Route path="events" element={<EventsPreview />} />
+                    <Route path="event/:id" element={<EventPage />} />
+                    <Route path="post-event" element={<PostEvent />} />
+                    <Route path="saved-events" element={<SavedEvents />} />
+                    <Route path="my-events" element={<MyEvents />} />
+                    
+                    {/* <Route path="chat" element={<ChatPreview />} /> */}
+                    <Route path="direct/inbox" element={<ChatPreview />} />
+                    <Route path="direct/t/:userId" element={<ChatPreview />} />
+
+                    <Route path="projects" element={<ProjectShelfPreview />} />
+                    <Route path="project/:id" element={<ProjectPage />} />
+                    <Route path="post-project" element={<PostProject />} />
+                    <Route path="saved-projects" element={<SavedProjects />} />
+                    <Route path="my-projects" element={<MyProjects />} />
+                    
+                    <Route path="profile/:userName" element={<ProfilePreviewWrapper />} />
+                    <Route path="settings" element={<SettingsPreview />} />
+                    <Route path="notifications" element={<Notifications />} />
+                </Route>
+
                 <Route
                     path="/reset-password/:token"
                     element={<ResetPasswordPage />}

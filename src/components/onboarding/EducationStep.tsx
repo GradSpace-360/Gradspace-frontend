@@ -1,6 +1,6 @@
 import { format } from "date-fns"
 import { motion } from "framer-motion"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, Info } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -76,9 +76,17 @@ export function EducationStep() {
                 <h2 className="text-2xl font-philosopher font-bold">
                     Education
                 </h2>
-                <p className="text-muted-foreground">
-                    Add your education details (optional)
-                </p>
+                <p className="text-muted-foreground">(optional)</p>
+                {/* Disclaimer added here */}
+                <div className="flex items-start gap-2 text-sm text-muted-foreground pt-2">
+                    <Info className="h-4 w-4 flex-shrink-0" />
+                    <p>
+                        Your education details are collected solely for use
+                        within this platform and will only be accessible to
+                        authenticated users. We do not share this information
+                        with any external parties.
+                    </p>
+                </div>
             </div>
 
             <Card>

@@ -15,6 +15,7 @@ export interface User {
     full_name: string
     department: string
     batch: string
+    profile_image: string | null
     // [key: string]: any // For any additional or dynamic user fields
 }
 

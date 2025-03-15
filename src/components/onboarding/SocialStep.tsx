@@ -9,6 +9,7 @@
 
 import { motion } from "framer-motion"
 import debounce from "lodash/debounce"
+import { Info } from "lucide-react"
 import { useCallback, useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -71,9 +72,16 @@ export function SocialStep() {
                 <h2 className="text-2xl font-philosopher font-bold">
                     Social Media & Links
                 </h2>
-                <p className="text-muted-foreground">
-                    Add your social media profiles and links (optional)
-                </p>
+                <p className="text-muted-foreground">(optional)</p>
+                <div className="flex items-start gap-2 text-sm text-muted-foreground pt-2">
+                    <Info className="h-4 w-4 flex-shrink-0" />
+                    <p>
+                        Your Social Media & Links are collected solely for use
+                        within this platform and will only be accessible to
+                        authenticated users. We do not share this information
+                        with any external parties.
+                    </p>
+                </div>
             </div>
 
             <Card>

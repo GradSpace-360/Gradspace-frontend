@@ -13,7 +13,7 @@ export function CompletionStep() {
     const { formData, setStep, submitFormData } = useOnboardingStore()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const navigate = useNavigate()
-    const { checkAuth } = useAuthStore()
+    const { checkAuth, user } = useAuthStore()
 
     // Convert binary image data to a URL for display
     const profileImageUrl = formData.profileImage
@@ -83,7 +83,12 @@ export function CompletionStep() {
                                 </div>
                             )}
                         </div>
-                        <h3 className="text-2xl font-semibold">
+                        <div>
+                            <h3 className="text-2xl font-philosopher font-semibold">
+                                {user!.full_name}
+                            </h3>
+                        </div>
+                        <h3 className="text-2xl font-philosopher  font-semibold">
                             {formData.headline}
                         </h3>
                         <p className="text-center text-muted-foreground">

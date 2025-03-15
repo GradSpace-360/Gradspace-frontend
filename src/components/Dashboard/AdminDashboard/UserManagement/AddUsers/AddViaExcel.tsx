@@ -67,45 +67,12 @@ type ExcelData = {
     Email: string
 }[]
 // sample file for reference
-// const generateSampleExcel = () => {
-//     const ws = utils.json_to_sheet([
-//         { "Full Name": "", Batch: "", Department: "", Role: "", Email: "" },
-//     ])
-//     const wb = utils.book_new()
-//     utils.book_append_sheet(wb, ws, "Users")
-//     const excelBuffer = write(wb, { bookType: "xlsx", type: "array" })
-//     const data = new Blob([excelBuffer], {
-//         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-//     })
-//     const url = window.URL.createObjectURL(data)
-//     const link = document.createElement("a")
-//     link.href = url
-//     link.download = "sample_user_data.xlsx"
-//     link.click()
-//     window.URL.revokeObjectURL(url)
-// }
-// some dummy data register.
 const generateSampleExcel = () => {
-    // Generate 20 student records
-    const students = Array.from({ length: 20 }, (_, i) => {
-        const studentNumber = i + 1
-        return {
-            "Full Name": `ElectronicsSt${studentNumber}`,
-            Batch: "2020",
-            Department: "ECE",
-            Role: "Alumni",
-            Email: `electronicstudent${studentNumber}@gmail.com`,
-        }
-    })
-
-    // Create worksheet with student data
-    const ws = utils.json_to_sheet(students)
-
-    // Create workbook and append worksheet
+    const ws = utils.json_to_sheet([
+        { "Full Name": "", Batch: "", Department: "", Role: "", Email: "" },
+    ])
     const wb = utils.book_new()
     utils.book_append_sheet(wb, ws, "Users")
-
-    // Generate Excel file and trigger download
     const excelBuffer = write(wb, { bookType: "xlsx", type: "array" })
     const data = new Blob([excelBuffer], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -117,6 +84,40 @@ const generateSampleExcel = () => {
     link.click()
     window.URL.revokeObjectURL(url)
 }
+// some dummy data register.
+// const generateSampleExcel = () => {
+//     // Generate 20 student records
+//     const students = Array.from({ length: 20 }, (_, i) => {
+//         const studentNumber = i + 1
+//         return {
+//             "Full Name": `ElectronicsSt${studentNumber}`,
+//             Batch: "2020",
+//             Department: "ECE",
+//             Role: "Alumni",
+//             Email: `electronicstudent${studentNumber}@gmail.com`,
+//         }
+//     })
+
+//     // Create worksheet with student data
+//     const ws = utils.json_to_sheet(students)
+
+//     // Create workbook and append worksheet
+//     const wb = utils.book_new()
+//     utils.book_append_sheet(wb, ws, "Users")
+
+//     // Generate Excel file and trigger download
+//     const excelBuffer = write(wb, { bookType: "xlsx", type: "array" })
+//     const data = new Blob([excelBuffer], {
+//         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+//     })
+//     const url = window.URL.createObjectURL(data)
+//     const link = document.createElement("a")
+//     link.href = url
+//     link.download = "sample_user_data.xlsx"
+//     link.click()
+//     window.URL.revokeObjectURL(url)
+// }
+
 const AddViaExcel: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false)
     const { parsedExcelData, setParsedExcelData } = useAddUserStore()
