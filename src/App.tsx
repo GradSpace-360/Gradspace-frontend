@@ -1,6 +1,5 @@
-import { useEffect } from "react"
 // Lazy load pages and components to reduce the initial bundle size
-import { lazy, Suspense } from "react"
+import { lazy, Suspense,useEffect } from "react"
 import {  Navigate, Route, Routes, useParams } from "react-router-dom"
 
 import  Notifications  from "@/components/Dashboard/UserDashboard/Notifications"
@@ -8,7 +7,6 @@ import { useAuthStore } from "@/store/auth"
 
 import ChatPreview from "./components/Dashboard/UserDashboard/Chat"
 import Connect from "./components/Dashboard/UserDashboard/Connect"
-// import EventsPreview from "./components/Dashboard/UserDashboard/Events"
 import EventsPreview from "./components/Dashboard/UserDashboard/Events"
 import EventPage from "./components/Dashboard/UserDashboard/Events/Event"
 import MyEvents from "./components/Dashboard/UserDashboard/Events/MyEvents"
@@ -104,9 +102,9 @@ const App = () => {
                 <Route
                     path="/register-rejected"
                     element={
-                        <ProtectedRoute>
+                        // <ProtectedRoute>
                         <ManualVerificationRejected />
-                     </ProtectedRoute>
+                    //  </ProtectedRoute>
                     }
                 />
 
