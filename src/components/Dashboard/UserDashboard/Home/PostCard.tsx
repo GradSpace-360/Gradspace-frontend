@@ -139,7 +139,9 @@ export function PostCard({ post }: { post: Post }) {
             >
                 <DialogContent className="w-full h-full lg:h-auto sm:max-h-[80vh] xm:max-w-2xl xm:min-h-[400px] flex flex-col">
                     <DialogHeader>
-                        <DialogTitle>Comments</DialogTitle>
+                        <DialogTitle className="text-center">
+                            Comments
+                        </DialogTitle>
                     </DialogHeader>
 
                     <div className="flex flex-col flex-1 overflow-hidden">
