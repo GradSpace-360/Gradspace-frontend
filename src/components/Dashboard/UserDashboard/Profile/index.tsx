@@ -7,6 +7,8 @@ import {
     Info,
     Link2,
     Star,
+    UserPlus,
+    Users,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { FileText, Instagram, Linkedin } from "react-feather"
@@ -21,7 +23,7 @@ import formatDate from "@/lib/utils"
 import { useAuthStore } from "@/store/auth"
 import { useProfileStore } from "@/store/user/profile"
 
-// import { useChatStore } from "../Chat2/store"
+import { ConnectionDialogs } from "./ConnectionDialogs"
 import { TimelineItem } from "./TimeLineItem"
 import { UserPostGrid } from "./UserPostGrid"
 
@@ -37,7 +39,20 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
     const { profileData, loading, error, fetchProfile, toggleFollow } =
         useProfileStore()
     const navigate = useNavigate()
-    // const { setSelectedUser } = useChatStore()
+
+    const [connectionsDialog, setConnectionsDialog] = useState<{
+        isOpen: boolean
+        activeTab: "followers" | "following"
+    }>({
+        isOpen: false,
+        activeTab: "followers",
+    })
+    const openConnectionsDialog = (tab: "followers" | "following") => {
+        setConnectionsDialog({
+            isOpen: true,
+            activeTab: tab,
+        })
+    }
     useEffect(() => {
         fetchProfile(userName)
     }, [userName, fetchProfile])
@@ -91,108 +106,12 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
                 >
                     {/* Profile Header */}
                     <div className="flex flex-col gap-6">
-                        {/* <div className="flex items-start gap-8">
-
-                            <div className="relative w-20 h-20 md:w-32 md:h-32 rounded-full p-[2px] bg-gradient-to-tr from-black dark:from-white via-black/30 dark:to-white to-gray-400">
-                                <div className="w-full h-full rounded-full overflow-hidden">
-                                    <img
-                                        src={`${axiosPrivate.defaults.baseURL}/${profile.profileImage}`}
-                                        alt="Profile picture"
-                                        width={128}
-                                        height={128}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="flex-1">
-                                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
-                                    <div>
-                                        <h2 className="text-xl">
-                                            {user.fullName}
-                                        </h2>
-                                        <p className="text-sm text-gray-500">
-                                            @{userName}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex gap-2">
-                                        {isCurrentUser ? (
-                                            <Button className="">
-                                                Edit Profile
-                                            </Button>
-                                        ) : (
-                                            <>
-                                                <Button className="">
-                                                    Follow
-                                                </Button>
-                                                <Button
-                                                    variant="secondary"
-                                                    className=""
-                                                >
-                                                    Message
-                                                </Button>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-8 my-4">
-                                    <div className="text-center sm:text-left">
-                                        <span className="font-semibold">0</span>{" "}
-                                        posts
-                                    </div>
-                                    <div className="text-center sm:text-left">
-                                        <span className="font-semibold">
-                                            {educations.length}
-                                        </span>{" "}
-                                        educations
-                                    </div>
-                                    <div className="text-center sm:text-left">
-                                        <span className="font-semibold">
-                                            {experiences.length}
-                                        </span>{" "}
-                                        experiences
-                                    </div>
-                                </div>
-
-                                <div className="space-y-1">
-                                    <h1 className="font-semibold">
-                                        {profile.headline}
-                                    </h1>
-                                    <p className="text-zinc-700 dark:text-zinc-300">
-                                        {profile.about}
-                                    </p>
-                                    <div className="flex flex-wrap gap-2 mt-2">
-                                        {profile.skills.map((skill, index) => (
-                                            <span
-                                                key={index}
-                                                className="px-2 py-1 rounded-full bg-primary-foreground text-sm"
-                                            >
-                                                {skill}
-                                            </span>
-                                        ))}
-                                        {profile.interests.map(
-                                            (interest, index) => (
-                                                <span
-                                                    key={index}
-                                                    className="px-2 py-1 rounded-full bg-primary-foreground text-sm flex items-center gap-1"
-                                                >
-                                                    <Star className="h-4 w-4" />{" "}
-                                                    {interest}
-                                                </span>
-                                            )
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
                         <div className="flex flex-col xs:flex-row items-start gap-4 xs:gap-6 sm:gap-8">
                             {/* Profile Picture */}
                             <div
                                 className="relative w-16 h-16 xs:w-20 xs:h-20 md:w-32 md:h-32 shrink-0
-                  rounded-full p-[1px] bg-gradient-to-tr from-black dark:from-white
-                  via-black/30 dark:to-black to-white   "
+              rounded-full p-[1px] bg-gradient-to-tr from-black dark:from-white
+              via-black/30 dark:to-black to-white   "
                             >
                                 {profile.profileImage ? (
                                     <div className="w-full h-full rounded-full overflow-hidden">
@@ -276,7 +195,7 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
                                     </div>
                                 </div>
 
-                                {/* Stats */}
+                                {/* Stats - Updated to be clickable */}
                                 <div className="flex flex-wrap gap-4 my-3 sm:my-4">
                                     <div className="flex items-center gap-1">
                                         <span className="font-semibold">
@@ -286,20 +205,32 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
                                             posts
                                         </span>
                                     </div>
-                                    <div className="flex items-center gap-1">
+                                    <div
+                                        className="flex items-center gap-1 cursor-pointer hover:text-primary transition-colors"
+                                        onClick={() =>
+                                            openConnectionsDialog("following")
+                                        }
+                                    >
                                         <span className="font-semibold">
                                             {user.followingCount}
                                         </span>
-                                        <span className="text-sm text-muted-foreground">
-                                            following
+                                        <span className="text-sm text-muted-foreground flex items-center gap-1">
+                                            following{" "}
+                                            <UserPlus className="h-3 w-3" />
                                         </span>
                                     </div>
-                                    <div className="flex items-center gap-1">
+                                    <div
+                                        className="flex items-center gap-1 cursor-pointer hover:text-primary transition-colors"
+                                        onClick={() =>
+                                            openConnectionsDialog("followers")
+                                        }
+                                    >
                                         <span className="font-semibold">
                                             {user.followerCount}
                                         </span>
-                                        <span className="text-sm text-muted-foreground">
-                                            followers
+                                        <span className="text-sm text-muted-foreground flex items-center gap-1">
+                                            followers{" "}
+                                            <Users className="h-3 w-3" />
                                         </span>
                                     </div>
                                 </div>
@@ -312,28 +243,6 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
                                     <p className="text-sm text-zinc-700 dark:text-zinc-300 line-clamp-3">
                                         {profile.about}
                                     </p>
-                                    {/* <div className="flex flex-wrap gap-2">
-                                        {profile.skills.map((skill, index) => (
-                                            <span
-                                                key={index}
-                                                className="px-2 py-1  rounded-sm  bg-primary-foreground text-xs sm:text-sm"
-                                            >
-                                                {skill}
-                                            </span>
-                                        ))}
-
-                                        {profile.interests.map(
-                                            (interest, index) => (
-                                                <span
-                                                    key={index}
-                                                    className="px-2 py-1 rounded-sm bg-primary-foreground text-xs sm:text-sm flex items-center gap-1"
-                                                >
-                                                    <Star className="h-3 w-3 sm:h-4 sm:w-4" />
-                                                    {interest}
-                                                </span>
-                                            )
-                                        )}
-                                    </div> */}
 
                                     <div className="space-y-4">
                                         {/* Skills Section */}
@@ -481,7 +390,7 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
                                         <button
                                             key={tab}
                                             className={`px-4 py-3 text-sm font-semibold
-                                                    ${activeTab === tab ? "border-t-2 border-primary" : "text-primary"}`}
+                                ${activeTab === tab ? "border-t-2 border-primary" : "text-primary"}`}
                                             onClick={() =>
                                                 setActiveTab(
                                                     tab as
@@ -570,6 +479,20 @@ const ProfilePreview = ({ userName }: ProfilePreviewProps) => {
                     </div>
                 </motion.div>
             </div>
+            <ConnectionDialogs
+                isOpen={connectionsDialog.isOpen}
+                onOpenChange={(isOpen) =>
+                    setConnectionsDialog({ ...connectionsDialog, isOpen })
+                }
+                activeTab={connectionsDialog.activeTab}
+                username={userName}
+                setActiveTab={(tab) =>
+                    setConnectionsDialog({
+                        ...connectionsDialog,
+                        activeTab: tab,
+                    })
+                }
+            />
         </div>
     )
 }
