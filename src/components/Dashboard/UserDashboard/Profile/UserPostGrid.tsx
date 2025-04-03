@@ -1,13 +1,28 @@
 import { formatDistanceToNow } from "date-fns"
 import { motion } from "framer-motion"
-import { Camera, Heart, MessageCircle, SendHorizontal } from "lucide-react"
+import {
+    Camera,
+    Flag,
+    Heart,
+    MessageCircle,
+    MoreVertical,
+    SendHorizontal,
+    Trash,
+} from "lucide-react"
 import { useEffect, useState } from "react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { axiosPrivate } from "@/config/axiosInstance"
+import { useAuthStore } from "@/store/auth"
 import { usePostStore } from "@/store/user/post"
 
 import { PostCard } from "../Home/PostCard"
@@ -25,9 +40,12 @@ export function UserPostGrid({ username }: UserPostGridProps) {
         fetchUserPosts,
         selectedPostId,
         setSelectedPostId,
+        deletePost,
+        deleteComment,
     } = usePostStore()
     const [commentInput, setCommentInput] = useState("")
     const { createComment } = usePostStore()
+    const { user } = useAuthStore()
 
     useEffect(() => {
         const handleScroll = () => {
@@ -55,6 +73,21 @@ export function UserPostGrid({ username }: UserPostGridProps) {
             setCommentInput("")
         }
     }
+
+    const handleDeletePost = (postId: string) => {
+        deletePost(postId)
+        setSelectedPostId(null)
+    }
+
+    const handleDeleteComment = (postId: string, commentId: string) => {
+        deleteComment(postId, commentId)
+    }
+
+    const handleReportPost = () => {
+        // This is just a placeholder for now
+        alert("Post reported. This feature will be implemented in the future.")
+    }
+
     if (error)
         return (
             <div className="text-center py-8 ">
@@ -162,31 +195,77 @@ export function UserPostGrid({ username }: UserPostGridProps) {
                             <div className="hidden lg:flex flex-col h-full">
                                 <div className="p-6 flex flex-col h-[calc(90vh-2rem)]">
                                     {/* Post Header */}
-                                    <div className="flex items-center gap-4 pb-3">
-                                        <Avatar>
-                                            <AvatarImage
-                                                src={`${axiosPrivate.defaults.baseURL}/${selectedPost.author.image}`}
-                                            />
-                                            <AvatarFallback>
-                                                {
-                                                    selectedPost.author
-                                                        .username[0]
-                                                }
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div>
-                                            <h3 className="font-semibold">
-                                                {selectedPost.author.username}
-                                            </h3>
-                                            <p className="text-sm text-muted-foreground">
-                                                {formatDistanceToNow(
-                                                    new Date(
-                                                        selectedPost.createdAt
-                                                    ),
-                                                    { addSuffix: true }
-                                                )}
-                                            </p>
+                                    <div className="flex items-center justify-between pb-3">
+                                        <div className="flex items-center gap-4">
+                                            <Avatar>
+                                                <AvatarImage
+                                                    src={`${axiosPrivate.defaults.baseURL}/${selectedPost.author.image}`}
+                                                />
+                                                <AvatarFallback>
+                                                    {
+                                                        selectedPost.author
+                                                            .username[0]
+                                                    }
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div>
+                                                <h3 className="font-semibold">
+                                                    {
+                                                        selectedPost.author
+                                                            .username
+                                                    }
+                                                </h3>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {formatDistanceToNow(
+                                                        new Date(
+                                                            selectedPost.createdAt
+                                                        ),
+                                                        { addSuffix: true }
+                                                    )}
+                                                </p>
+                                            </div>
                                         </div>
+
+                                        {/* Post Options Dropdown */}
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-8 w-8"
+                                                >
+                                                    <MoreVertical className="h-4 w-4" />
+                                                    <span className="sr-only">
+                                                        More options
+                                                    </span>
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end">
+                                                {user?.id ===
+                                                selectedPost.author.id ? (
+                                                    <DropdownMenuItem
+                                                        className="text-destructive focus:text-destructive"
+                                                        onClick={() =>
+                                                            handleDeletePost(
+                                                                selectedPost.id
+                                                            )
+                                                        }
+                                                    >
+                                                        <Trash className="mr-2 h-4 w-4" />
+                                                        Delete post
+                                                    </DropdownMenuItem>
+                                                ) : (
+                                                    <DropdownMenuItem
+                                                        onClick={
+                                                            handleReportPost
+                                                        }
+                                                    >
+                                                        <Flag className="mr-2 h-4 w-4" />
+                                                        Report post
+                                                    </DropdownMenuItem>
+                                                )}
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
                                     </div>
 
                                     {/* Post Content */}
@@ -215,25 +294,49 @@ export function UserPostGrid({ username }: UserPostGridProps) {
                                                     </Avatar>
                                                     <div className="flex-1">
                                                         <div className="bg-muted/50 rounded-lg p-3">
-                                                            <div className="flex items-center gap-2 mb-1">
-                                                                <p className="text-sm font-medium">
-                                                                    {
-                                                                        comment
-                                                                            .author
-                                                                            .username
-                                                                    }
-                                                                </p>
-                                                                <span className="text-xs text-muted-foreground">
-                                                                    {formatDistanceToNow(
-                                                                        new Date(
-                                                                            comment.createdAt
-                                                                        ),
+                                                            <div className="flex items-center justify-between gap-2 mb-1">
+                                                                <div className="flex items-center gap-2">
+                                                                    <p className="text-sm font-medium">
                                                                         {
-                                                                            addSuffix:
-                                                                                true,
+                                                                            comment
+                                                                                .author
+                                                                                .username
                                                                         }
-                                                                    )}
-                                                                </span>
+                                                                    </p>
+                                                                    <span className="text-xs text-muted-foreground">
+                                                                        {formatDistanceToNow(
+                                                                            new Date(
+                                                                                comment.createdAt
+                                                                            ),
+                                                                            {
+                                                                                addSuffix:
+                                                                                    true,
+                                                                            }
+                                                                        )}
+                                                                    </span>
+                                                                </div>
+                                                                {user?.id ===
+                                                                    comment
+                                                                        .author
+                                                                        .id && (
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="icon"
+                                                                        className="h-6 w-6"
+                                                                        onClick={() =>
+                                                                            handleDeleteComment(
+                                                                                selectedPost.id,
+                                                                                comment.id
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <Trash className="h-3 w-3 text-destructive" />
+                                                                        <span className="sr-only">
+                                                                            Delete
+                                                                            comment
+                                                                        </span>
+                                                                    </Button>
+                                                                )}
                                                             </div>
                                                             <p className="text-sm">
                                                                 {
@@ -266,7 +369,7 @@ export function UserPostGrid({ username }: UserPostGridProps) {
                                                     )
                                                 }
                                                 placeholder="Add a comment..."
-                                                className="flex-1 border-none rounded  text-base focus:outline-none p-4"
+                                                className="flex-1 border-none rounded text-base focus:outline-none p-4"
                                             />
                                             <Button
                                                 type="submit"
