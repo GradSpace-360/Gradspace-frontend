@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from "date-fns"
-import { Heart, MessageCircle } from "lucide-react"
+import { Flag, Heart, MessageCircle, MoreVertical, Trash } from "lucide-react"
 import { useState } from "react"
 import { NavLink } from "react-router-dom"
 
@@ -12,8 +12,15 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { axiosPrivate } from "@/config/axiosInstance"
+import { useAuthStore } from "@/store/auth"
 import { usePostStore } from "@/store/user/post"
 
 type Comment = {
@@ -44,9 +51,12 @@ type Post = {
 }
 
 export function PostCard({ post }: { post: Post }) {
-    const { toggleLike, createComment } = usePostStore()
+    const { toggleLike, createComment, deletePost, deleteComment } =
+        usePostStore()
     const [showCommentsModal, setShowCommentsModal] = useState(false)
     const [commentInput, setCommentInput] = useState("")
+    const { user } = useAuthStore()
+    const isAuthor = user?.id === post.author.id
 
     const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -56,42 +66,87 @@ export function PostCard({ post }: { post: Post }) {
         }
     }
 
+    const handleDeletePost = () => {
+        deletePost(post.id)
+    }
+
+    const handleDeleteComment = (commentId: string) => {
+        deleteComment(post.id, commentId)
+    }
+
+    const handleReportPost = () => {
+        // This is just a placeholder for now
+        alert("Post reported. This feature will be implemented in the future.")
+    }
+
     return (
         <>
             {/* Main Post Card */}
             <Card className="mb-6 rounded-md shadow-md p-0 border dark:border-muted ">
-                <CardHeader className="flex flex-row items-center pl-3 pt-3 gap-4 pb-2">
-                    <NavLink
-                        to={`/dashboard/profile/${post.author.username}`}
-                        className="block"
-                    >
-                        <Avatar>
-                            <AvatarImage
-                                src={`${axiosPrivate.defaults.baseURL}/${post.author.image}`}
-                            />
-                            <AvatarFallback>
-                                {post.author.username[0]}
-                            </AvatarFallback>
-                        </Avatar>
-                    </NavLink>
-                    <div>
+                <CardHeader className="flex flex-row items-center justify-between pl-3 pt-3 pb-2">
+                    <div className="flex items-center gap-4">
                         <NavLink
                             to={`/dashboard/profile/${post.author.username}`}
                             className="block"
                         >
-                            <h3 className="font-semibold">
-                                {post.author.username}
-                            </h3>
+                            <Avatar>
+                                <AvatarImage
+                                    src={`${axiosPrivate.defaults.baseURL}/${post.author.image}`}
+                                />
+                                <AvatarFallback>
+                                    {post.author.username[0]}
+                                </AvatarFallback>
+                            </Avatar>
                         </NavLink>
-                        <p className="text-sm text-muted-foreground">
-                            {formatDistanceToNow(new Date(post.createdAt), {
-                                addSuffix: true,
-                            })}
-                        </p>
+                        <div>
+                            <NavLink
+                                to={`/dashboard/profile/${post.author.username}`}
+                                className="block"
+                            >
+                                <h3 className="font-semibold">
+                                    {post.author.username}
+                                </h3>
+                            </NavLink>
+                            <p className="text-sm text-muted-foreground">
+                                {formatDistanceToNow(new Date(post.createdAt), {
+                                    addSuffix: true,
+                                })}
+                            </p>
+                        </div>
                     </div>
+
+                    {/* 3-dot menu with delete/report options */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                            >
+                                <MoreVertical className="h-4 w-4" />
+                                <span className="sr-only">More options</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            {isAuthor ? (
+                                <DropdownMenuItem
+                                    className="text-destructive focus:text-destructive"
+                                    onClick={handleDeletePost}
+                                >
+                                    <Trash className="mr-2 h-4 w-4" />
+                                    Delete post
+                                </DropdownMenuItem>
+                            ) : (
+                                <DropdownMenuItem onClick={handleReportPost}>
+                                    <Flag className="mr-2 h-4 w-4" />
+                                    Report post
+                                </DropdownMenuItem>
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </CardHeader>
 
-                <CardContent className="space-y-4 pb-3  p-1">
+                <CardContent className="space-y-4 pb-3 p-1">
                     <p className="text-base pl-4 leading-relaxed break-words ">
                         {post.content}
                     </p>
@@ -132,7 +187,6 @@ export function PostCard({ post }: { post: Post }) {
             </Card>
 
             {/* Comments Modal */}
-
             <Dialog
                 open={showCommentsModal}
                 onOpenChange={setShowCommentsModal}
@@ -162,20 +216,43 @@ export function PostCard({ post }: { post: Post }) {
                                     </Avatar>
                                     <div className="flex-1">
                                         <div className="bg-muted/50 rounded-lg p-3">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <p className="text-sm font-medium">
-                                                    {comment.author.username}
-                                                </p>
-                                                <span className="text-xs text-muted-foreground">
-                                                    {formatDistanceToNow(
-                                                        new Date(
-                                                            comment.createdAt
-                                                        ),
+                                            <div className="flex items-center justify-between gap-2 mb-1">
+                                                <div className="flex items-center gap-2">
+                                                    <p className="text-sm font-medium">
                                                         {
-                                                            addSuffix: true,
+                                                            comment.author
+                                                                .username
                                                         }
-                                                    )}
-                                                </span>
+                                                    </p>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {formatDistanceToNow(
+                                                            new Date(
+                                                                comment.createdAt
+                                                            ),
+                                                            {
+                                                                addSuffix: true,
+                                                            }
+                                                        )}
+                                                    </span>
+                                                </div>
+                                                {user?.id ===
+                                                    comment.author.id && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-6 w-6"
+                                                        onClick={() =>
+                                                            handleDeleteComment(
+                                                                comment.id
+                                                            )
+                                                        }
+                                                    >
+                                                        <Trash className="h-3 w-3 text-destructive" />
+                                                        <span className="sr-only">
+                                                            Delete comment
+                                                        </span>
+                                                    </Button>
+                                                )}
                                             </div>
                                             <p className="text-sm">
                                                 {comment.content}
