@@ -52,8 +52,10 @@ type PostStore = {
     error: string | null
     fetchPosts: (initial?: boolean) => Promise<void>
     createPost: (content: string, image: File | null) => Promise<void>
+    deletePost: (postId: string) => Promise<void>
     toggleLike: (postId: string) => Promise<void>
     createComment: (postId: string, content: string) => Promise<void>
+    deleteComment: (postId: string, commentId: string) => Promise<void>
     fetchUserPosts: (username: string, initial?: boolean) => Promise<void>
     selectedPostId: string | null
     setSelectedPostId: (postId: string | null) => void
@@ -211,6 +213,19 @@ export const usePostStore = create<PostStore>((set, get) => ({
         }
     },
 
+    deletePost: async (postId) => {
+        try {
+            await axiosPrivate.delete(`/posts/${postId}`)
+            set((state) => ({
+                homePosts: state.homePosts.filter((post) => post.id !== postId),
+                userPosts: state.userPosts.filter((post) => post.id !== postId),
+                error: null,
+            }))
+        } catch {
+            set({ error: "Failed to delete post" })
+        }
+    },
+
     toggleLike: async (postId) => {
         try {
             await axiosPrivate.post(`/posts/${postId}/like`)
@@ -273,6 +288,40 @@ export const usePostStore = create<PostStore>((set, get) => ({
             }))
         } catch {
             set({ error: "Failed to create comment" })
+        }
+    },
+
+    deleteComment: async (postId, commentId) => {
+        try {
+            await axiosPrivate.delete(`/posts/${postId}/comment/${commentId}`)
+
+            set((state) => ({
+                homePosts: state.homePosts.map((post) =>
+                    post.id === postId
+                        ? {
+                              ...post,
+                              comments: Math.max(0, post.comments - 1),
+                              commentList: post.commentList.filter(
+                                  (comment) => comment.id !== commentId
+                              ),
+                          }
+                        : post
+                ),
+                userPosts: state.userPosts.map((post) =>
+                    post.id === postId
+                        ? {
+                              ...post,
+                              comments: Math.max(0, post.comments - 1),
+                              commentList: post.commentList.filter(
+                                  (comment) => comment.id !== commentId
+                              ),
+                          }
+                        : post
+                ),
+                error: null,
+            }))
+        } catch {
+            set({ error: "Failed to delete comment" })
         }
     },
 }))
