@@ -20,6 +20,9 @@ export interface Event {
     is_saved?: boolean
 }
 
+// Define event report reason type
+type EventReportReason = "inappropriateContent" | "Spam" | "Fake Event" | "Safety Concerns"
+
 export interface EventPagination {
     total: number
     page: number
@@ -35,6 +38,7 @@ export interface EventState {
     myEventsPagination: EventPagination
     isLoading: boolean
     error: string | null
+    reportError: string | null
     selectedEvent: Event | null
     eventsFilters: {
         search: string
@@ -50,6 +54,7 @@ export interface EventState {
     updateEventStatus: (eventId: string, isOpen: boolean) => Promise<void>
     deleteEvent: (eventId: string) => Promise<void>
     setSelectedEvent: (event: Event | null) => void
+    reportEvent: (eventId: string, reason: EventReportReason) => Promise<void> // Add report function
     setEventsFilters: (filters: {
         search?: string
         event_type?: string
