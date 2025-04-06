@@ -44,7 +44,10 @@ export function RequestManagementPage() {
         <div className="p-2  md:p-2">
             <Card className="border-0 shadow-none">
                 <CardHeader>
-                    <CardTitle>Pending Requests</CardTitle>
+                    <CardTitle className="font-semibold font-philosopher  text-xl overflow-hidden whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                        {" "}
+                        Pending Requests
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <UserRequestTable />
