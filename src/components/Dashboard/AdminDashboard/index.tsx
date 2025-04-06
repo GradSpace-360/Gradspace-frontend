@@ -6,7 +6,7 @@ import JobManagementPage from "./JobManagement"
 import PostModerationPage from "./PostModeration"
 import { RequestManagementPage } from "./RequestManagement"
 import { AdminSidebar } from "./SideBar"
-import { UserManagementPage } from "./UserManagement"
+import UserManagementPage from "./UserManagement"
 const AdminDashboard: React.FC = () => {
     const [selectedFeature, setSelectedFeature] = useState<string | null>(null)
 
