@@ -117,7 +117,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
                                             <motion.span
                                                 initial={false}
                                                 animate={{ opacity: 1 }}
-                                                className="overflow-hidden whitespace-nowrap"
+                                                className="overflow-hidden whitespace-nowrap font-philosopher text-base"
                                             >
                                                 {item.label}
                                             </motion.span>
