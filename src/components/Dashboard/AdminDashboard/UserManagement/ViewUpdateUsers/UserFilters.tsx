@@ -125,7 +125,7 @@ export function UserFilters({
                     name="search"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Search</FormLabel>
+                            <FormLabel className="sr-only">Search</FormLabel>
                             <FormControl>
                                 <Input
                                     {...field}
@@ -142,7 +142,7 @@ export function UserFilters({
                         name="batch"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Batch</FormLabel>
+                                <FormLabel className="sr-only">Batch</FormLabel>
                                 <Select
                                     onValueChange={field.onChange}
                                     value={field.value}
@@ -172,7 +172,9 @@ export function UserFilters({
                         name="department"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Department</FormLabel>
+                                <FormLabel className="sr-only">
+                                    Department
+                                </FormLabel>
                                 <Select
                                     onValueChange={field.onChange}
                                     value={field.value}
@@ -202,7 +204,7 @@ export function UserFilters({
                         name="role"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Role</FormLabel>
+                                <FormLabel className="sr-only">Role</FormLabel>
                                 <Select
                                     onValueChange={field.onChange}
                                     value={field.value}
