@@ -1,6 +1,8 @@
 import { formatDistanceToNow } from "date-fns"
 import { Flag, Heart, MessageCircle, MoreVertical, Trash } from "lucide-react"
+import type React from "react"
 import { useState } from "react"
+import toast from "react-hot-toast"
 import { NavLink } from "react-router-dom"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -9,6 +11,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import {
     Dialog,
     DialogContent,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
@@ -50,11 +53,21 @@ type Post = {
     commentList: Comment[] | []
 }
 
+type ReportReason = "inappropriateContent" | "Spam" | "Harassment"
+
 export function PostCard({ post }: { post: Post }) {
-    const { toggleLike, createComment, deletePost, deleteComment } =
-        usePostStore()
+    const {
+        toggleLike,
+        createComment,
+        deletePost,
+        deleteComment,
+        reportPost,
+        reportError,
+    } = usePostStore()
     const [showCommentsModal, setShowCommentsModal] = useState(false)
+    const [showReportModal, setShowReportModal] = useState(false)
     const [commentInput, setCommentInput] = useState("")
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
     const { user } = useAuthStore()
     const isAuthor = user?.id === post.author.id
 
@@ -68,6 +81,7 @@ export function PostCard({ post }: { post: Post }) {
 
     const handleDeletePost = () => {
         deletePost(post.id)
+        setIsDropdownOpen(false)
     }
 
     const handleDeleteComment = (commentId: string) => {
@@ -75,14 +89,53 @@ export function PostCard({ post }: { post: Post }) {
     }
 
     const handleReportPost = () => {
-        // This is just a placeholder for now
-        alert("Post reported. This feature will be implemented in the future.")
+        // Explicitly close the dropdown before opening the modal
+        setIsDropdownOpen(false)
+        // Use setTimeout to ensure dropdown is fully closed before opening modal
+        setTimeout(() => {
+            setShowReportModal(true)
+        }, 100)
+    }
+
+    const submitReport = async (reason: ReportReason) => {
+        try {
+            await reportPost(post.id, reason)
+            toast.success("Post reported successfully.")
+        } catch {
+            // Error handling is managed by the store
+            toast.error(reportError || "Failed to report the post.")
+        } finally {
+            setShowReportModal(false)
+        }
+    }
+
+    // Handle modal closing with cleanup
+    const handleReportModalClose = (open: boolean) => {
+        if (!open) {
+            // Add a small delay to ensure proper cleanup
+            setTimeout(() => {
+                setShowReportModal(false)
+            }, 50)
+        } else {
+            setShowReportModal(true)
+        }
+    }
+
+    const handleCommentsModalClose = (open: boolean) => {
+        if (!open) {
+            // Add a small delay to ensure proper cleanup
+            setTimeout(() => {
+                setShowCommentsModal(false)
+            }, 50)
+        } else {
+            setShowCommentsModal(true)
+        }
     }
 
     return (
         <>
             {/* Main Post Card */}
-            <Card className="mb-6 rounded-md shadow-md p-0 border dark:border-muted ">
+            <Card className="mb-6 rounded-md shadow-md p-0 border dark:border-muted">
                 <CardHeader className="flex flex-row items-center justify-between pl-3 pt-3 pb-2">
                     <div className="flex items-center gap-4">
                         <NavLink
@@ -116,7 +169,10 @@ export function PostCard({ post }: { post: Post }) {
                     </div>
 
                     {/* 3-dot menu with delete/report options */}
-                    <DropdownMenu>
+                    <DropdownMenu
+                        open={isDropdownOpen}
+                        onOpenChange={setIsDropdownOpen}
+                    >
                         <DropdownMenuTrigger asChild>
                             <Button
                                 variant="ghost"
@@ -189,7 +245,7 @@ export function PostCard({ post }: { post: Post }) {
             {/* Comments Modal */}
             <Dialog
                 open={showCommentsModal}
-                onOpenChange={setShowCommentsModal}
+                onOpenChange={handleCommentsModalClose}
             >
                 <DialogContent className="w-full h-full lg:h-auto sm:max-h-[80vh] xm:max-w-2xl xm:min-h-[400px] flex flex-col">
                     <DialogHeader>
@@ -288,6 +344,60 @@ export function PostCard({ post }: { post: Post }) {
                             </div>
                         </form>
                     </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Report Post Modal - Separate from dropdown state management */}
+            <Dialog
+                open={showReportModal}
+                onOpenChange={handleReportModalClose}
+            >
+                <DialogContent className="sm:max-w-md" showCloseButton={false}>
+                    <DialogHeader>
+                        <DialogTitle>Report Post</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <p className="text-sm text-muted-foreground">
+                            Please select a reason for reporting this post:
+                        </p>
+
+                        <div className="grid gap-2">
+                            <Button
+                                variant="outline"
+                                className="justify-start text-left font-normal"
+                                onClick={() =>
+                                    submitReport("inappropriateContent")
+                                }
+                            >
+                                <Flag className="mr-2 h-4 w-4" />
+                                Inappropriate Content
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="justify-start text-left font-normal"
+                                onClick={() => submitReport("Spam")}
+                            >
+                                <Flag className="mr-2 h-4 w-4" />
+                                Spam
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="justify-start text-left font-normal"
+                                onClick={() => submitReport("Harassment")}
+                            >
+                                <Flag className="mr-2 h-4 w-4" />
+                                Harassment
+                            </Button>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            variant="secondary"
+                            onClick={() => setShowReportModal(false)}
+                        >
+                            Cancel
+                        </Button>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
         </>
