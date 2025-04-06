@@ -14,6 +14,7 @@ export const useJobStore = create<JobState>((set, get) => ({
     myJobsPagination: { total: 0, page: 1, limit: 9 },
     isLoading: false,
     error: null,
+    reportError: null,
     selectedJob: null,
     jobsFilters: { search: "", location: "", company_id: "", job_type: "" },
 
@@ -69,6 +70,34 @@ export const useJobStore = create<JobState>((set, get) => ({
                         : "Failed to fetch saved jobs",
                 isLoading: false,
             })
+        }
+    },
+
+    reportJob: async (jobId, reason) => {
+        try {
+            await axiosPrivate.post(`/jobs/${jobId}/report`, {
+                reason,
+            })
+            set({ reportError: null })
+            toast.success("Job reported successfully!")
+            return Promise.resolve()
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 400) {
+                    const errorMessage =
+                        error.response?.data?.message ||
+                        "You have already reported this job"
+                    set({ reportError: errorMessage })
+                    toast.error(errorMessage)
+                } else {
+                    set({ reportError: "Failed to report job" })
+                    toast.error("Failed to report job")
+                }
+            } else {
+                set({ reportError: "Failed to report job" })
+                toast.error("Failed to report job")
+            }
+            return Promise.reject(error)
         }
     },
 
