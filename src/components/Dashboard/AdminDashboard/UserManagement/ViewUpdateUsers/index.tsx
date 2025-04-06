@@ -31,7 +31,7 @@
 import { useEffect } from "react"
 
 import { Pagination } from "@/components/Pagination"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { useUsersStore } from "@/store/admin/viewUpdateStore"
 
 import { UserFilters } from "./UserFilters"
@@ -68,11 +68,11 @@ export default function ViewUsers() {
     }
 
     return (
-        <Card className="w-full border-0 shadow-none">
-            <CardHeader>
+        <Card className="p-0 px-0 border-0  shadow-none  m-0">
+            {/* <CardHeader>
                 <CardTitle>View Users</CardTitle>
-            </CardHeader>
-            <CardContent>
+            </CardHeader> */}
+            <CardContent className="p-0 px-0 border-0  shadow-none  m-0">
                 <UserFilters
                     filters={filters}
                     onFilterChange={handleFilterChange}
