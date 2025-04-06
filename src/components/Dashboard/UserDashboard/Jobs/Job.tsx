@@ -1,12 +1,21 @@
 import MDEditor from "@uiw/react-md-editor"
-import { DoorClosed, DoorOpen, MapPinIcon } from "lucide-react"
-import { useEffect } from "react"
+import { DoorClosed, DoorOpen, Flag, MapPinIcon } from "lucide-react"
+import { useEffect, useState } from "react"
+// import { toast } from "react-hot-toast"
 import { NavLink, useParams } from "react-router-dom"
 import { BarLoader } from "react-spinners"
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
 import {
     Select,
     SelectContent,
@@ -19,6 +28,12 @@ import { axiosPrivate } from "@/config/axiosInstance"
 import { useAuthStore } from "@/store/auth"
 import { useJobStore } from "@/store/user/job"
 
+type JobReportReason =
+    | "Incorrect Information"
+    | "Scam"
+    | "Fake Job"
+    | "Discriminatory Content"
+
 const JobPage = () => {
     const { id } = useParams<{ id: string }>()
     // Job store hooks
@@ -30,8 +45,12 @@ const JobPage = () => {
         savedJobs,
         myJobs,
         isLoading,
+        reportJob,
+        // reportError,
     } = useJobStore()
     const { user } = useAuthStore()
+
+    const [reportDialogOpen, setReportDialogOpen] = useState(false)
 
     useEffect(() => {
         if (!id) return
@@ -58,6 +77,18 @@ const JobPage = () => {
             setSelectedJob({ ...selectedJob, is_open: isOpen })
         } catch (error) {
             console.error("Failed to update job status:", error)
+        }
+    }
+
+    const handleReportSubmit = async (reportReason: JobReportReason) => {
+        if (!id || !reportReason) return
+        try {
+            await reportJob(id, reportReason)
+            // toast.success("Job reported successfully")
+        } catch {
+            // toast.error(reportError || "Failed to report job")
+        } finally {
+            setReportDialogOpen(false)
         }
     }
 
@@ -154,7 +185,7 @@ const JobPage = () => {
             {/* Main Content Sections */}
             <section className="space-y-6">
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold">About the Role</h2>
+                    <h2 className="text-xl font-semibold">About the Role</h2>
                     <p className="leading-relaxed text-muted-foreground">
                         {selectedJob.description}
                     </p>
@@ -163,7 +194,7 @@ const JobPage = () => {
                 <Separator />
 
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold">Requirements</h2>
+                    <h2 className="text-xl font-semibold">Requirements</h2>
                     <div className="prose prose-sm dark:prose-invert max-w-none rounded-lg border p-4">
                         <MDEditor.Markdown
                             style={{
@@ -179,12 +210,9 @@ const JobPage = () => {
                     <>
                         <Separator />
                         <div className="space-y-4">
-                            <h2 className="text-2xl font-semibold">
-                                Ready to Apply?
-                            </h2>
                             <Button
                                 asChild
-                                className="w-full gap-2 py-6 text-lg md:w-auto"
+                                className="w-full  text-sm md:w-auto"
                             >
                                 <a
                                     href={selectedJob.apply_link}
@@ -202,7 +230,7 @@ const JobPage = () => {
             {/* Meta Information */}
             <Separator />
 
-            <div className="flex w-full justify-end">
+            <div className="flex w-full flex-col items-center justify-end">
                 <NavLink
                     to={`/dashboard/profile/${selectedJob.posted_by.username}`}
                     className="block w-full md:w-1/2"
@@ -232,7 +260,83 @@ const JobPage = () => {
                         </div>
                     </div>
                 </NavLink>
+                {user && selectedJob.posted_by.id !== user.id && (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center w-32 m-4 gap-1 text-muted-foreground"
+                        onClick={() => setReportDialogOpen(true)}
+                    >
+                        <Flag className="h-4 w-4" />
+                        Report
+                    </Button>
+                )}
             </div>
+
+            {/* Report Dialog */}
+            <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
+                <DialogContent
+                    className="sm:max-w-[425px]"
+                    showCloseButton={false}
+                >
+                    <DialogHeader>
+                        <DialogTitle>Report Job</DialogTitle>
+                        <DialogDescription>
+                            Please select a reason for reporting this job
+                            posting. Admin will review your report.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="space-y-4 py-4">
+                        <div className="grid gap-2">
+                            <Button
+                                variant="outline"
+                                className="justify-start text-left font-normal"
+                                onClick={() => handleReportSubmit("Fake Job")}
+                            >
+                                <Flag className="mr-2 h-4 w-4" />
+                                Fake Job
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="justify-start text-left font-normal"
+                                onClick={() => handleReportSubmit("Scam")}
+                            >
+                                <Flag className="mr-2 h-4 w-4" />
+                                Scam
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="justify-start text-left font-normal"
+                                onClick={() =>
+                                    handleReportSubmit("Discriminatory Content")
+                                }
+                            >
+                                <Flag className="mr-2 h-4 w-4" />
+                                Discriminatory Content
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="justify-start text-left font-normal"
+                                onClick={() =>
+                                    handleReportSubmit("Incorrect Information")
+                                }
+                            >
+                                <Flag className="mr-2 h-4 w-4" />
+                                Incorrect Information
+                            </Button>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            onClick={() => setReportDialogOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
