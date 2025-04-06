@@ -41,6 +41,7 @@ export interface JobState {
     myJobsPagination: JobPagination
     isLoading: boolean
     error: string | null
+    reportError: string | null; // New field for report-specific errors
     selectedJob: Job | null
     jobsFilters: {
         search: string
@@ -48,7 +49,8 @@ export interface JobState {
         company_id: string
         job_type: string
     }
-
+    
+    reportJob: (jobId: string, reason: string) => Promise<void>; // New report job method
     fetchJobs: () => Promise<void>
     fetchSavedJobs: (page?: number, limit?: number) => Promise<void>
     fetchMyJobs: (page?: number, limit?: number) => Promise<void>
