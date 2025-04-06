@@ -1,8 +1,9 @@
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { create } from "zustand"
 
 import { axiosPrivate } from "@/config/axiosInstance"
 import { EventState } from "@/types/user/event"
+// Define event report reason type
 
 export const useEventStore = create<EventState>((set, get) => ({
     events: [],
@@ -13,9 +14,27 @@ export const useEventStore = create<EventState>((set, get) => ({
     myEventsPagination: { total: 0, page: 1, limit: 9 },
     isLoading: false,
     error: null,
+    reportError: null,
     selectedEvent: null,
     eventsFilters: { search: "", event_type: "", start_date: "" },
-
+    // New report event functionality
+    reportEvent: async (eventId, reason) => {
+        try {
+            await axiosPrivate.post(`/events/${eventId}/report`, {
+                reason,
+            })
+            set({ reportError: null }) // Clear report-specific error
+            return Promise.resolve()
+        } catch (error) {
+            const axiosError = error as AxiosError
+            if (axiosError.response?.status === 400) {
+                set({ reportError: "You have already reported this event" })
+            } else {
+                set({ reportError: "Failed to report event" })
+            }
+            return Promise.reject(axiosError)
+        }
+    },
     fetchEvents: async () => {
         try {
             set({ isLoading: true, error: null })
