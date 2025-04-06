@@ -119,7 +119,7 @@ export default function AnalyticsDashboardPage() {
         <div className="flex flex-col gap-4 p-4 pt-10 sm:p-8">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4 mb-6">
                 <div className="space-y-1">
-                    <h1 className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                    <h1 className="font-semibold font-philosopher  text-xl overflow-hidden whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
                         Analytics Dashboard
                     </h1>
                     <p className="text-muted-foreground text-sm sm:text-base">
