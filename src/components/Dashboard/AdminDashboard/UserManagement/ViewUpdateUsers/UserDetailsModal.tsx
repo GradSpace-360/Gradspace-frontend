@@ -87,7 +87,10 @@ export function UserDetailsModal({
     return (
         <div className="m-4">
             <Dialog open={!!user} onOpenChange={onClose}>
-                <DialogContent className="sm:max-w-[700px]">
+                <DialogContent
+                    className="sm:max-w-[700px]"
+                    showCloseButton={false}
+                >
                     <div>
                         <DialogHeader>
                             <DialogTitle>User Details</DialogTitle>
