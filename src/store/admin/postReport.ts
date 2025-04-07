@@ -86,7 +86,8 @@ export const usePostReportsStore = create<PostReportsState>((set, get) => ({
             })
 
             set({
-                reportedPosts: response.data.data,
+                reportedPosts:
+                    response.data.data === null ? [] : response.data.data,
                 pagination: response.data.meta,
                 isLoading: false,
             })
