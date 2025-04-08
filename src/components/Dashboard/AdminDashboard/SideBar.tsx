@@ -36,6 +36,7 @@ const menuItems = [
     { name: "jobs", icon: Briefcase, label: "Jobs Management" },
     { name: "events", icon: Folder, label: "Event Moderation" },
     { name: "post", icon: FileText, label: "Post Moderation" },
+    { name: "HigherEducation", icon: FileText, label: "Higher Education" },
 ]
 
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({

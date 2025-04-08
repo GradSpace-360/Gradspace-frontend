@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 
 import AnalyticsDashboardPage from "./Analytics"
 import EventModerationPage from "./EventModeration"
+import HigherEducationComponent from "./HigherEducation"
 import JobManagementPage from "./JobManagement"
 import PostModerationPage from "./PostModeration"
 import { RequestManagementPage } from "./RequestManagement"
@@ -39,6 +40,8 @@ const AdminDashboard: React.FC = () => {
                 return <EventModerationPage />
             case "post":
                 return <PostModerationPage />
+            case "HigherEducation":
+                return <HigherEducationComponent />
             default:
                 return (
                     <>
