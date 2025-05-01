@@ -32,15 +32,15 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
+// import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
+// import {
+//     Tooltip,
+//     TooltipContent,
+//     TooltipProvider,
+//     TooltipTrigger,
+// } from "@/components/ui/tooltip"
 
 // GitHub API response types
 export interface GitHubRepository {
@@ -1100,11 +1100,6 @@ function TopContributors({ data }: { data: ContributionData[] }) {
         )
     }
 
-    const totalContributions = data.reduce(
-        (sum, item) => sum + item.contributions,
-        0
-    )
-
     return (
         <motion.div
             className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg overflow-hidden"
@@ -1119,11 +1114,6 @@ function TopContributors({ data }: { data: ContributionData[] }) {
             <CardContent>
                 <div className="space-y-6">
                     {data.map((contributor, index) => {
-                        const percentage = Math.round(
-                            (contributor.contributions / totalContributions) *
-                                100
-                        )
-
                         return (
                             <div key={contributor.login} className="space-y-2">
                                 <div className="flex items-center justify-between">
@@ -1153,29 +1143,9 @@ function TopContributors({ data }: { data: ContributionData[] }) {
                                             >
                                                 {contributor.name}
                                             </a>
-                                            <div className="text-sm text-muted-foreground">
-                                                {contributor.contributions}{" "}
-                                                contributions
-                                            </div>
                                         </div>
                                     </div>
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <span className="text-sm font-medium">
-                                                    {percentage}%
-                                                </span>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>
-                                                    {percentage}% of total
-                                                    contributions
-                                                </p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
                                 </div>
-                                <Progress value={percentage} className="h-2" />
                             </div>
                         )
                     })}
