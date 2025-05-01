@@ -23,7 +23,8 @@ const TracingBeam = lazy(() => import("@/components/ui/tracing-beam"))
 const DotBackground = lazy(() => import("@/components/DotBackground"))
 const TermsOfService = lazy(() => import("../TermsOfService"))
 const Features = lazy(() => import("./Features"))
-const Testimonials = lazy(() => import("./Testimonials"))
+// const Testimonials = lazy(() => import("./Testimonials"))
+const CampusGallery = lazy(() => import("./CampusGallary"))
 const OptimizedImage = lazy(() => import("./OptimizedImage"))
 
 const navItems = [
@@ -43,8 +44,8 @@ const navItems = [
         icon: <IconStar />,
     },
     {
-        name: "Contact",
-        link: "#contact",
+        name: "campus",
+        link: "#gallery",
         icon: <IconContact />,
     },
 ]
@@ -146,7 +147,7 @@ export default function Home() {
                                             <AnimatedShinyText>
                                                 student-alumni synergy
                                             </AnimatedShinyText>
-                                            .{" "}
+                                            . <br />
                                         </p>
                                     </motion.div>
                                     <motion.div
@@ -178,6 +179,9 @@ export default function Home() {
                                             </ShinyButton>
                                         </ScrollLink>
                                     </motion.div>
+                                    <span className=" inline-block text-center w-full philosopher text-gray-900  dark:text-white font-philosopher ">
+                                        College of Engineering Adoor
+                                    </span>
                                 </motion.div>
                             </div>
                         </section>
@@ -214,11 +218,11 @@ export default function Home() {
 
                         {/* Features Section */}
                         <Features />
+                        {/* Campus Gallery Section */}
+                        <section id="gallery">
+                            <CampusGallery />
+                        </section>
 
-                        {/* Testimonials Section */}
-                        <Testimonials />
-
-                        {/* Contact Section */}
                         <section
                             id="contact"
                             className="w-full flex justify-center py-12 md:py-24 lg:py-32"
