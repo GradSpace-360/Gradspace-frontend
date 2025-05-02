@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { PulseLoader } from "react-spinners"
 
-import welcomeImg from "@/assets/lifestyle-students-talking-in-front-of-university-1.png"
+// import welcomeImg from "@/assets/lifestyle-students-talking-in-front-of-university-1.png"
 import DotBackground from "@/components/DotBackground"
 import { Button } from "@/components/ui/button"
 import {
