@@ -56,14 +56,13 @@ const Login: React.FC = () => {
     return (
         <div className="flex  min-h-screen justify-center">
             <DotBackground />
-            <div className="hidden sm:block  w-1/3">
-                {/* <AnimatedLogo facefill={true} /> */}
+            {/* <div className="hidden sm:block  w-1/3">
                 <img
                     src={welcomeImg}
                     className=" object-contain h-screen w-full"
                     alt="welcome-image"
                 />
-            </div>
+            </div> */}
             <div className="flex justify-center items-center bg-transparent   w-full sm:w-1/2 ">
                 <Card className="w-full max-w-md  z-50 bg-transparent border-0 shadow-none ">
                     {/* bg-[#ffffef] dark:bg-[#09090d] */}
@@ -174,5 +173,4 @@ const Login: React.FC = () => {
         </div>
     )
 }
-
 export default Login
