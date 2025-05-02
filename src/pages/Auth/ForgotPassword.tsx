@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import { PulseLoader } from "react-spinners"
 
-import welcomeImg from "@/assets/3d-casual-life-busy-female-student-min.png"
+// import welcomeImg from "@/assets/3d-casual-life-busy-female-student-min.png"
 import DotBackground from "@/components/DotBackground"
 import { Button } from "@/components/ui/button"
 import {
@@ -50,13 +50,13 @@ const ForgotPasswordPage: React.FC = () => {
     return (
         <div className="flex min-h-screen justify-center">
             <DotBackground />
-            <div className="hidden sm:block w-1/3 lg:w-1/4">
+            {/* <div className="hidden sm:block w-1/3 lg:w-1/4">
                 <img
                     src={welcomeImg}
                     className="object-contain h-screen w-[90%]"
                     alt="welcome-image"
                 />
-            </div>
+            </div> */}
             <div className="flex justify-center items-center w-full sm:w-1/2">
                 <Card className="w-full max-w-md z-50 bg-transparent border-0 shadow-none">
                     <CardHeader className="space-y-1">

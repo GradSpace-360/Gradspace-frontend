@@ -13,7 +13,7 @@ import toast from "react-hot-toast"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { PulseLoader } from "react-spinners"
 
-import welcomeImg from "@/assets/3d-casual-life-business-woman-working-on-laptop-while-sitting-on-floor.png"
+// import welcomeImg from "@/assets/3d-casual-life-business-woman-working-on-laptop-while-sitting-on-floor.png"
 import DotBackground from "@/components/DotBackground"
 import { Button } from "@/components/ui/button"
 import {
@@ -65,13 +65,13 @@ const ResetPasswordPage: React.FC = () => {
     return (
         <div className="flex min-h-screen w-full justify-center">
             <DotBackground />
-            <div className="hidden sm:block w-1/3">
+            {/* <div className="hidden sm:block w-1/3">
                 <img
                     src={welcomeImg}
                     className=" object-contain h-screen w-full"
                     alt="welcome-image"
                 />
-            </div>
+            </div> */}
             <div className="flex justify-center items-center sm:w-1/2 w-full">
                 <Card className="w-full max-w-md z-50 bg-transparent border-0 shadow-none">
                     <CardHeader className="space-y-1">
