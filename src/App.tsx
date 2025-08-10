@@ -60,9 +60,9 @@ const ProfilePreviewWrapper = () => {
 const App = () => {
     const { isCheckingAuth, checkAuth, user } = useAuthStore()
 
-    // useEffect(() => {
-    //     checkAuth() // Check if the user is authenticated
-    // }, [checkAuth])
+    useEffect(() => {
+        checkAuth() // Check if the user is authenticated
+    }, [checkAuth])
 
     // Show PreLoader while authentication check is in progress
     // if (isCheckingAuth) {
