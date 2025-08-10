@@ -58,8 +58,9 @@ const ProfilePreviewWrapper = () => {
 };
 
 const App = () => {
-    const { isCheckingAuth, checkAuth, user } = useAuthStore()
-
+    // const { isCheckingAuth, checkAuth, user } = useAuthStore()
+    const { checkAuth, user } = useAuthStore()  // re enable the above line . and remove this current line , temporarily trying the deployed frontend the down backend api.
+    
     useEffect(() => {
         checkAuth() // Check if the user is authenticated
     }, [checkAuth])
