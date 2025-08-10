@@ -75,9 +75,9 @@ const App = () => {
                 <Route
                     path="/"
                     element={
-                        <RedirectRoute>
+                      //  <RedirectRoute>
                             <HomePage />
-                        </RedirectRoute>
+                      //  </RedirectRoute>
                     }
                 />
 
